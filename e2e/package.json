@@ -1,0 +1,14 @@
+{
+  "name": "verkkokauppa-e2e",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.0",
+    "mongodb-memory-server": "^10.1.2"
+  }
+}

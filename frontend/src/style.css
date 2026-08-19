@@ -1,0 +1,5 @@
+/* Tämä tiedosto oli aiemmin Viten oletusmallipohjan (scaffold) tyylitiedosto
+   (hero/docs/counter-elementit, joita tässä sovelluksessa ei ole käytössä).
+   Se poistettiin, koska se määritteli omat --text/--bg-muuttujansa, jotka
+   olivat ristiriidassa App.vue:n teema (vaalea/tumma) -muuttujien kanssa —
+   kaikki oikea tyylittely tulee nyt yksinomaan App.vue:n <style>-lohkosta. */
