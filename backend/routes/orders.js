@@ -1,83 +1,93 @@
 import { Router } from 'express'
-import { readDB, writeDB } from '../utils/db.js'
+import Product from '../models/Product.js'
+import Order from '../models/Order.js'
 import { requireAuth } from '../middleware/auth.js'
 
 const router = Router()
 
-// Kaikki tilausreitit vaativat kirjautumisen
 router.use(requireAuth)
 
 // TILAUKSEN LUONTI ostoskorista
-// Pyynnön runko: { items: [{ productId: 1, quantity: 2 }, ...] }
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const { items } = req.body
 
   if (!Array.isArray(items) || items.length === 0) {
     return res.status(400).json({ error: 'Ostoskori on tyhjä' })
   }
 
-  const db = readDB()
-
-  // Summa lasketaan PALVELIMELLA, ei luoteta frontendin hintaan —
-  // näin kukaan ei voi muuttaa hintaa selaimessa ennen lähetystä.
-  let total = 0
-  const orderItems = []
-
-  for (const item of items) {
-    const product = db.products.find((p) => p.id === item.productId)
-    if (!product) {
-      return res.status(400).json({ error: `Tuotetta id=${item.productId} ei löydy` })
+  try {
+    // Ensin tarkistetaan, että kaikkea riittää varastossa
+    const products = []
+    for (const item of items) {
+      const product = await Product.findById(item.productId)
+      if (!product) {
+        return res.status(400).json({ error: `Tuotetta id=${item.productId} ei löydy` })
+      }
+      const quantity = item.quantity || 1
+      if (product.stock < quantity) {
+        return res.status(400).json({
+          error: `Tuotetta "${product.name}" ei ole tarpeeksi varastossa (jäljellä: ${product.stock} kpl)`,
+        })
+      }
+      products.push({ product, quantity })
     }
-    const quantity = item.quantity || 1
-    total += product.price * quantity
-    orderItems.push({
-      productId: product.id,
-      name: product.name,
-      price: product.price,
-      quantity,
+
+    // Sitten lasketaan summa ja vähennetään varastosta
+    let total = 0
+    const orderItems = []
+
+    for (const { product, quantity } of products) {
+      total += product.price * quantity
+      product.stock -= quantity
+      await product.save() // tallennetaan päivitetty varastomäärä MongoDB:hen
+
+      orderItems.push({
+        productId: product._id,
+        name: product.name,
+        price: product.price,
+        quantity,
+      })
+    }
+
+    const newOrder = await Order.create({
+      userId: req.userId,
+      items: orderItems,
+      total,
+      status: 'odottaa maksua',
     })
+
+    res.json(newOrder)
+  } catch (err) {
+    res.status(500).json({ error: 'Tilauksen luonti epäonnistui' })
   }
-
-  const newOrder = {
-    id: db.orders.length + 1,
-    userId: req.userId,
-    items: orderItems,
-    total,
-    status: 'odottaa maksua',
-    createdAt: new Date().toISOString(),
-  }
-
-  db.orders.push(newOrder)
-  writeDB(db)
-
-  res.json(newOrder)
 })
 
-// TILAUKSEN "MAKSU" — SIMULAATIO.
-// Oikeaa maksujen vastaanottoa ei ole: mitään korttitietoja ei kerätä
-// eikä tallenneta. Oikeaa maksua varten käytetään erillistä maksupalvelua
-// (Stripe, Klarna, Paytrail jne.) — se on tämän opetusprojektin ulkopuolella.
-router.post('/:id/pay', (req, res) => {
-  const orderId = Number(req.params.id)
-  const db = readDB()
+// TILAUKSEN "MAKSU" — SIMULAATIO
+router.post('/:id/pay', async (req, res) => {
+  try {
+    const order = await Order.findOne({ _id: req.params.id, userId: req.userId })
+    if (!order) {
+      return res.status(404).json({ error: 'Tilausta ei löydy' })
+    }
 
-  const order = db.orders.find((o) => o.id === orderId && o.userId === req.userId)
-  if (!order) {
-    return res.status(404).json({ error: 'Tilausta ei löydy' })
+    order.status = 'maksettu'
+    order.paidAt = new Date()
+    await order.save()
+
+    res.json(order)
+  } catch (err) {
+    res.status(500).json({ error: 'Maksun käsittely epäonnistui' })
   }
-
-  order.status = 'maksettu'
-  order.paidAt = new Date().toISOString()
-  writeDB(db)
-
-  res.json(order)
 })
 
 // OMIEN TILAUSTEN LISTA
-router.get('/', (req, res) => {
-  const db = readDB()
-  const myOrders = db.orders.filter((o) => o.userId === req.userId)
-  res.json(myOrders)
+router.get('/', async (req, res) => {
+  try {
+    const myOrders = await Order.find({ userId: req.userId })
+    res.json(myOrders)
+  } catch (err) {
+    res.status(500).json({ error: 'Tilausten haku epäonnistui' })
+  }
 })
 
 export default router

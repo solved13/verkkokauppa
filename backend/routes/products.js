@@ -1,31 +1,26 @@
 import { Router } from 'express'
-import { readDB, writeDB } from '../utils/db.js'
+import Product from '../models/Product.js'
 import { requireAdmin } from '../middleware/auth.js'
 
 const router = Router()
 
 // GET /api/products?category=old  tai  ?category=new
-// Julkinen reitti — kaikki voivat katsoa tuotteita ilman kirjautumista
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   const { category } = req.query
-  const db = readDB()
 
-  let products = db.products
-
-  if (category) {
-    products = products.filter((p) => p.category === category)
+  try {
+    const filter = category ? { category } : {}
+    const products = await Product.find(filter)
+    res.json(products)
+  } catch (err) {
+    res.status(500).json({ error: 'Tuotteiden haku epäonnistui' })
   }
-
-  res.json(products)
 })
 
-// POST /api/products — UUDEN TUOTTEEN LISÄYS
-// Vaatii ADMIN-oikeudet (requireAdmin) — tavallinen käyttäjä ei voi lisätä tuotteita.
-// Pyynnön runko: { name, price, category, image, stock }
-router.post('/', requireAdmin, (req, res) => {
+// POST /api/products — vain admin voi lisätä uuden tuotteen
+router.post('/', requireAdmin, async (req, res) => {
   const { name, price, category, image, stock } = req.body
 
-  // Yksinkertainen validointi — tarkistetaan, että pakolliset kentät on annettu
   if (!name || !price || !category) {
     return res.status(400).json({ error: 'Täytä nimi, hinta ja kategoria' })
   }
@@ -34,26 +29,19 @@ router.post('/', requireAdmin, (req, res) => {
     return res.status(400).json({ error: "Kategorian pitää olla 'old' tai 'new'" })
   }
 
-  const db = readDB()
+  try {
+    const newProduct = await Product.create({
+      name,
+      price: Number(price),
+      category,
+      image: image || '',
+      stock: stock !== undefined ? Number(stock) : 0,
+    })
 
-  // Uusi id on suurin nykyinen id + 1
-  const newId = db.products.length > 0
-    ? Math.max(...db.products.map((p) => p.id)) + 1
-    : 1
-
-  const newProduct = {
-    id: newId,
-    name,
-    price: Number(price),
-    category,
-    image: image || '', // jos kuvaa ei annettu, jätetään tyhjäksi
-    stock: stock !== undefined ? Number(stock) : 0,
+    res.json(newProduct)
+  } catch (err) {
+    res.status(500).json({ error: 'Tuotteen lisäys epäonnistui' })
   }
-
-  db.products.push(newProduct)
-  writeDB(db)
-
-  res.json(newProduct)
 })
 
 export default router
