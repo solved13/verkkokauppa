@@ -90,7 +90,7 @@
       <p v-if="loadingProducts">Ladataan tuotteita…</p>
 
       <div v-else class="products-grid">
-        <div v-for="product in products" :key="product.id" class="product-card">
+        <div v-for="product in products" :key="product._id" class="product-card">
           <!-- Tuotekuva ladataan internetistä annetusta linkistä -->
           <div class="product-image">
             <img :src="product.image" :alt="product.name" class="product-photo" />
@@ -127,7 +127,7 @@
         <h3>Ostoskori</h3>
         <p v-if="cart.length === 0">Ostoskori on tyhjä</p>
         <ul v-else class="cart-list">
-          <li v-for="item in cart" :key="item.id">{{ item.name }} — {{ item.price }} €</li>
+          <li v-for="(item, index) in cart" :key="index">{{ item.name }} — {{ item.price }} €</li>
         </ul>
 
         <p class="cart-total">
@@ -149,7 +149,7 @@
     <!-- ===================== -->
     <div v-if="currentPage === 'payment'" class="payment-screen">
       <div class="payment-box">
-        <h2>Tilaus nro {{ activeOrder.id }}</h2>
+        <h2>Tilaus nro {{ activeOrder._id }}</h2>
         <p>Maksettava summa: <strong>{{ activeOrder.total }} €</strong></p>
         <p>Tila: {{ activeOrder.status }}</p>
 
@@ -204,7 +204,7 @@
 import { ref, computed, onMounted } from 'vue'
 
 // Backendin osoite
-const API_URL = 'http://localhost:3000/api'
+const API_URL = 'https://verkkokauppa.onrender.com/api'
 
 // ------------------------------
 // NAVIGOINTI
@@ -309,7 +309,7 @@ const cart = ref([])
 function addToCart(product) {
   // Lasketaan, kuinka monta tätä tuotetta on jo ostoskorissa,
   // jotta emme anna lisätä enempää kuin varastossa on jäljellä.
-  const alreadyInCart = cart.value.filter((item) => item.id === product.id).length
+  const alreadyInCart = cart.value.filter((item) => item._id === product._id).length
 
   if (alreadyInCart >= product.stock) {
     alert(`Valitettavasti tuotetta "${product.name}" on varastossa vain ${product.stock} kpl`)
@@ -336,12 +336,13 @@ async function checkout() {
   checkoutError.value = ''
 
   // Lasketaan kunkin tuotteen määrä ostoskorissa palvelinta varten
+  // (MongoDB:n _id on merkkijono, ei numero — siksi ei muunneta Number():ksi)
   const itemsMap = {}
   for (const item of cart.value) {
-    itemsMap[item.id] = (itemsMap[item.id] || 0) + 1
+    itemsMap[item._id] = (itemsMap[item._id] || 0) + 1
   }
   const items = Object.entries(itemsMap).map(([productId, quantity]) => ({
-    productId: Number(productId),
+    productId,
     quantity,
   }))
 
@@ -367,7 +368,7 @@ async function checkout() {
 }
 
 async function payForOrder() {
-  const response = await fetch(`${API_URL}/orders/${activeOrder.value.id}/pay`, {
+  const response = await fetch(`${API_URL}/orders/${activeOrder.value._id}/pay`, {
     method: 'POST',
     headers: authHeaders(),
   })
