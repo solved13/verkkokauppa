@@ -6,7 +6,7 @@ import productsRoutes from './routes/products.js'
 import ordersRoutes from './routes/orders.js'
 
 const app = express()
-const PORT = process.env.PORT || 3000
+const PORT = 'https://verkkokauppa.onrender.com'
 
 app.use(cors()) // дозволяє фронтенду (з іншого порту) звертатись до цього API
 app.use(express.json()) // дозволяє читати JSON у тілі запитів
@@ -17,7 +17,7 @@ app.use('/api/products', productsRoutes)
 app.use('/api/orders', ordersRoutes)
 
 app.get('/', (req, res) => {
-  res.send('Sneaker Shop API працює 👟')
+  res.send('Sneaker Shop API work 👟')
 })
 
 app.listen(PORT, () => {
