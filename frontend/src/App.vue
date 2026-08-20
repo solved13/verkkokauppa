@@ -42,6 +42,7 @@
     <div v-if="currentPage === 'home'" class="choice-screen">
       <div class="user-bar">
         Hei, {{ user?.name }}!
+        <span v-if="user?.isAdmin" class="admin-badge">Ylläpitäjä</span>
         <button class="btn btn-back" @click="logout">Kirjaudu ulos</button>
       </div>
 
@@ -49,7 +50,7 @@
         <div class="choice-half choice-black" @click="openShop('old')">
           <h1 class="choice-title">VANHOJA TENNAREITA</h1>
           <p class="choice-desc">
-            KÄYTETYT LENKKARIT. Todistettua laatua edulliseen hintaan.
+            Klassisia malleja historialla. Todistettua laatua edulliseen hintaan.
           </p>
           <button class="btn btn-white" @click.stop="openShop('old')">
             Mene kauppaan
@@ -82,6 +83,10 @@
         </div>
       </header>
 
+      <button v-if="user?.isAdmin" class="btn btn-add-product" @click="openAddProduct">
+        + Lisää uusi tuote
+      </button>
+
       <p v-if="loadingProducts">Ladataan tuotteita…</p>
 
       <div v-else class="products-grid">
@@ -89,11 +94,31 @@
           <!-- Tuotekuva ladataan internetistä annetusta linkistä -->
           <div class="product-image">
             <img :src="product.image" :alt="product.name" class="product-photo" />
+            <!-- Merkki "loppuunmyyty", jos tuotetta ei ole varastossa -->
+            <span v-if="product.stock === 0" class="stock-badge stock-out">Loppuunmyyty</span>
           </div>
           <h3 class="product-name">{{ product.name }}</h3>
           <p class="product-price">{{ product.price }} €</p>
-          <button class="btn btn-add" @click="addToCart(product)">
-            Lisää ostoskoriin
+
+          <!-- Varastotilanne: näytetään eri väreillä riippuen jäljellä olevasta määrästä -->
+          <p
+            class="stock-info"
+            :class="{
+              'stock-low': product.stock > 0 && product.stock <= 3,
+              'stock-zero': product.stock === 0,
+            }"
+          >
+            <span v-if="product.stock === 0">Ei varastossa</span>
+            <span v-else-if="product.stock <= 3">⚠️ Loppumassa! Jäljellä {{ product.stock }} kpl</span>
+            <span v-else>Varastossa {{ product.stock }} kpl</span>
+          </p>
+
+          <button
+            class="btn btn-add"
+            :disabled="product.stock === 0"
+            @click="addToCart(product)"
+          >
+            {{ product.stock === 0 ? 'Ei saatavilla' : 'Lisää ostoskoriin' }}
           </button>
         </div>
       </div>
@@ -145,6 +170,33 @@
       </div>
     </div>
 
+    <!-- ===================== -->
+    <!-- NÄYTTÖ 4: UUDEN TUOTTEEN LISÄYS -->
+    <!-- ===================== -->
+    <div v-if="currentPage === 'addProduct'" class="add-product-screen">
+      <div class="add-product-box">
+        <h2>Lisää uusi tuote</h2>
+
+        <p v-if="addProductError" class="auth-error">{{ addProductError }}</p>
+        <p v-if="addProductSuccess" class="payment-success">✅ Tuote lisätty!</p>
+
+        <input v-model="newProduct.name" type="text" placeholder="Tuotteen nimi" />
+        <input v-model="newProduct.price" type="number" placeholder="Hinta (€)" />
+        <input v-model="newProduct.stock" type="number" placeholder="Varaston määrä (kpl)" />
+        <input v-model="newProduct.image" type="text" placeholder="Kuvan linkki (URL)" />
+
+        <select v-model="newProduct.category">
+          <option value="old">Vanhat tennarit</option>
+          <option value="new">Uudet tennarit</option>
+        </select>
+
+        <div class="add-product-buttons">
+          <button class="btn btn-back" @click="goToShop">Peruuta</button>
+          <button class="btn btn-black" @click="submitNewProduct">Tallenna tuote</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -152,7 +204,7 @@
 import { ref, computed, onMounted } from 'vue'
 
 // Backendin osoite
-const API_URL = import.meta.env.VITE_API_URL
+const API_URL = 'http://localhost:3000/api'
 
 // ------------------------------
 // NAVIGOINTI
@@ -255,6 +307,15 @@ async function loadProducts() {
 const cart = ref([])
 
 function addToCart(product) {
+  // Lasketaan, kuinka monta tätä tuotetta on jo ostoskorissa,
+  // jotta emme anna lisätä enempää kuin varastossa on jäljellä.
+  const alreadyInCart = cart.value.filter((item) => item.id === product.id).length
+
+  if (alreadyInCart >= product.stock) {
+    alert(`Valitettavasti tuotetta "${product.name}" on varastossa vain ${product.stock} kpl`)
+    return
+  }
+
   cart.value.push(product)
 }
 
@@ -315,6 +376,51 @@ async function payForOrder() {
     activeOrder.value = data
   }
 }
+
+// ------------------------------
+// UUDEN TUOTTEEN LISÄYS
+// ------------------------------
+const newProduct = ref({ name: '', price: '', stock: '', image: '', category: 'old' })
+const addProductError = ref('')
+const addProductSuccess = ref(false)
+
+function openAddProduct() {
+  addProductError.value = ''
+  addProductSuccess.value = false
+  // Ehdotetaan oletuksena samaa kategoriaa, jota käyttäjä parhaillaan katsoo
+  newProduct.value = { name: '', price: '', stock: '', image: '', category: category.value }
+  currentPage.value = 'addProduct'
+}
+
+function goToShop() {
+  currentPage.value = 'shop'
+}
+
+async function submitNewProduct() {
+  addProductError.value = ''
+  addProductSuccess.value = false
+
+  try {
+    const response = await fetch(`${API_URL}/products`, {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify(newProduct.value),
+    })
+    const data = await response.json()
+
+    if (!response.ok) {
+      addProductError.value = data.error || 'Tuotteen lisäys epäonnistui'
+      return
+    }
+
+    addProductSuccess.value = true
+    category.value = data.category // varmistetaan oikea kategoria näkyville
+    await loadProducts() // päivitetään lista, jotta uusi tuote näkyy heti
+    currentPage.value = 'shop'
+  } catch (err) {
+    addProductError.value = 'Yhteys palvelimeen epäonnistui'
+  }
+}
 </script>
 
 <style>
@@ -369,6 +475,14 @@ body {
   gap: 12px;
   padding: 12px 20px;
   background: #f0f0f0;
+}
+.admin-badge {
+  background-color: #1565c0;
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
 }
 .choice-halves {
   display: flex;
@@ -502,6 +616,78 @@ body {
 .cart-box {
   border-top: 2px solid #e0e0e0;
   padding-top: 20px;
+}
+
+/* ---------- Varastotilanne ---------- */
+.product-image {
+  position: relative;
+}
+.stock-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #fff;
+}
+.stock-out {
+  background-color: #c62828;
+}
+.stock-info {
+  font-size: 0.85rem;
+  color: #555;
+  margin: 4px 0 0;
+}
+.stock-low {
+  color: #e65100;
+  font-weight: 600;
+}
+.stock-zero {
+  color: #c62828;
+  font-weight: 600;
+}
+.btn-add:disabled {
+  background-color: #bdbdbd;
+  cursor: not-allowed;
+  transform: none;
+}
+.btn-add-product {
+  background-color: #1565c0;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+/* ---------- Uuden tuotteen lisäys ---------- */
+.add-product-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f5f5;
+}
+.add-product-box {
+  background: #fff;
+  padding: 32px;
+  border-radius: 10px;
+  width: 360px;
+  text-align: center;
+}
+.add-product-box input,
+.add-product-box select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+.add-product-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 8px;
 }
 
 /* ---------- Maksu ---------- */
