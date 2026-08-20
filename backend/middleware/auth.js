@@ -1,24 +1,42 @@
-// Middleware перевіряє, чи користувач авторизований (є валідний JWT-токен)
+// Middleware perustaa käyttäjän kirjautumisen ja roolin tarkistuksen
 import jwt from 'jsonwebtoken'
+import { readDB } from '../utils/db.js'
 
-// У реальному проєкті секрет зберігають у змінних оточення (.env),
-// а не прямо в коді! Тут — спрощено, для навчання.
+// Oikeassa projektissa salaisuus säilytetään .env-tiedostossa,
+// ei suoraan koodissa! Tässä yksinkertaistettuna opetusta varten.
 export const JWT_SECRET = 'navchalnyi-sekret-zminy-mene'
 
+// Tarkistaa, että pyynnössä on kelvollinen JWT-token
 export function requireAuth(req, res, next) {
-  const authHeader = req.headers.authorization // очікуємо "Bearer <token>"
+  const authHeader = req.headers.authorization // odotetaan "Bearer <token>"
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ error: 'Потрібна авторизація' })
+    return res.status(401).json({ error: 'Kirjautuminen vaaditaan' })
   }
 
   const token = authHeader.split(' ')[1]
 
   try {
     const payload = jwt.verify(token, JWT_SECRET)
-    req.userId = payload.userId // зберігаємо id користувача в запиті
-    next() // все ок, пропускаємо запит далі
+    req.userId = payload.userId // tallennetaan käyttäjän id pyyntöön
+    next() // kaikki ok, jatketaan eteenpäin
   } catch (err) {
-    return res.status(401).json({ error: 'Недійсний або протермінований токен' })
+    return res.status(401).json({ error: 'Virheellinen tai vanhentunut token' })
   }
+}
+
+// Tarkistaa ensin kirjautumisen (requireAuth) ja sen jälkeen,
+// että käyttäjällä on admin-oikeudet (isAdmin === true).
+// Käytetään reiteillä, joita vain ylläpitäjä saa käyttää (esim. tuotteen lisäys).
+export function requireAdmin(req, res, next) {
+  requireAuth(req, res, () => {
+    const db = readDB()
+    const user = db.users.find((u) => u.id === req.userId)
+
+    if (!user || !user.isAdmin) {
+      return res.status(403).json({ error: 'Vain ylläpitäjä voi tehdä tämän' })
+    }
+
+    next()
+  })
 }
