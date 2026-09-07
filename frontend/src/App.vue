@@ -1,15 +1,15 @@
 <template>
   <div id="app">
-
+ 
     <!-- ===================== -->
     <!-- NÄYTTÖ 0: KIRJAUTUMINEN/REKISTERÖINTI -->
     <!-- ===================== -->
     <div v-if="currentPage === 'auth'" class="auth-screen">
       <div class="auth-box">
         <h2>{{ authMode === 'login' ? 'Kirjaudu sisään' : 'Rekisteröidy' }}</h2>
-
+ 
         <p v-if="authError" class="auth-error">{{ authError }}</p>
-
+ 
         <input
           v-if="authMode === 'register'"
           v-model="authForm.name"
@@ -18,11 +18,11 @@
         />
         <input v-model="authForm.email" type="email" placeholder="Sähköposti" />
         <input v-model="authForm.password" type="password" placeholder="Salasana" />
-
+ 
         <button class="btn btn-black" @click="submitAuth">
           {{ authMode === 'login' ? 'Kirjaudu' : 'Rekisteröidy' }}
         </button>
-
+ 
         <p class="auth-switch">
           <span v-if="authMode === 'login'">
             Ei vielä tiliä?
@@ -35,7 +35,7 @@
         </p>
       </div>
     </div>
-
+ 
     <!-- ===================== -->
     <!-- NÄYTTÖ 1: VALINTA VANHAT/UUDET -->
     <!-- ===================== -->
@@ -45,7 +45,7 @@
         <span v-if="user?.isAdmin" class="admin-badge">Ylläpitäjä</span>
         <button class="btn btn-back" @click="logout">Kirjaudu ulos</button>
       </div>
-
+ 
       <div class="choice-halves">
         <div class="choice-half choice-black" @click="openShop('old')">
           <h1 class="choice-title">VANHOJA TENNAREITA</h1>
@@ -56,7 +56,7 @@
             Mene kauppaan
           </button>
         </div>
-
+ 
         <div class="choice-half choice-white" @click="openShop('new')">
           <h1 class="choice-title">UUDET TENNARIT</h1>
           <p class="choice-desc">
@@ -68,7 +68,7 @@
         </div>
       </div>
     </div>
-
+ 
     <!-- ===================== -->
     <!-- NÄYTTÖ 2: TUOTELUETTELO -->
     <!-- ===================== -->
@@ -82,13 +82,13 @@
           🛒 {{ totalItemsInCart }} kpl — {{ totalPrice }} €
         </div>
       </header>
-
+ 
       <button v-if="user?.isAdmin" class="btn btn-add-product" @click="openAddProduct">
         + Lisää uusi tuote
       </button>
-
+ 
       <p v-if="loadingProducts">Ladataan tuotteita…</p>
-
+ 
       <div v-else class="products-grid">
         <div v-for="product in products" :key="product._id" class="product-card">
           <!-- Tuotekuva ladataan internetistä annetusta linkistä -->
@@ -99,7 +99,7 @@
           </div>
           <h3 class="product-name">{{ product.name }}</h3>
           <p class="product-price">{{ product.price }} €</p>
-
+ 
           <!-- Varastotilanne: näytetään eri väreillä riippuen jäljellä olevasta määrästä -->
           <p
             class="stock-info"
@@ -112,7 +112,7 @@
             <span v-else-if="product.stock <= 3">⚠️ Loppumassa! Jäljellä {{ product.stock }} kpl</span>
             <span v-else>Varastossa {{ product.stock }} kpl</span>
           </p>
-
+ 
           <button
             class="btn btn-add"
             :disabled="product.stock === 0"
@@ -122,28 +122,28 @@
           </button>
         </div>
       </div>
-
+ 
       <div class="cart-box">
         <h3>Ostoskori</h3>
         <p v-if="cart.length === 0">Ostoskori on tyhjä</p>
         <ul v-else class="cart-list">
           <li v-for="(item, index) in cart" :key="index">{{ item.name }} — {{ item.price }} €</li>
         </ul>
-
+ 
         <p class="cart-total">
           Tuotteiden määrä: {{ totalItemsInCart }}<br />
           Summa yhteensä: {{ totalPrice }} €
         </p>
-
+ 
         <div class="cart-buttons" v-if="cart.length > 0">
           <button class="btn btn-clear" @click="clearCart">Tyhjennä ostoskori</button>
           <button class="btn btn-checkout" @click="checkout">Tee tilaus</button>
         </div>
-
+ 
         <p v-if="checkoutError" class="auth-error">{{ checkoutError }}</p>
       </div>
     </div>
-
+ 
     <!-- ===================== -->
     <!-- NÄYTTÖ 3: TILAUKSEN MAKSU -->
     <!-- ===================== -->
@@ -152,60 +152,64 @@
         <h2>Tilaus nro {{ activeOrder._id }}</h2>
         <p>Maksettava summa: <strong>{{ activeOrder.total }} €</strong></p>
         <p>Tila: {{ activeOrder.status }}</p>
-
+ 
         <!-- Tämä on maksun SIMULAATIO opetustarkoitukseen. -->
         <p class="payment-note">
           ⚠️ Tämä on opetustarkoitukseen tehty maksun simulaatio. Oikeita maksutietoja
           ei kerätä — oikeaan maksujen vastaanottoon käytetään palveluita kuten
           Stripe / Paytrail / Klarna.
         </p>
-
+ 
         <button class="btn btn-black" @click="payForOrder" v-if="activeOrder.status !== 'maksettu'">
           Simuloi maksu
         </button>
-
+ 
         <p v-else class="payment-success">✅ Tilaus on maksettu!</p>
-
+ 
         <button class="btn btn-back" @click="goHome">Etusivulle</button>
       </div>
     </div>
-
+ 
     <!-- ===================== -->
     <!-- NÄYTTÖ 4: UUDEN TUOTTEEN LISÄYS -->
     <!-- ===================== -->
     <div v-if="currentPage === 'addProduct'" class="add-product-screen">
       <div class="add-product-box">
         <h2>Lisää uusi tuote</h2>
-
+ 
         <p v-if="addProductError" class="auth-error">{{ addProductError }}</p>
         <p v-if="addProductSuccess" class="payment-success">✅ Tuote lisätty!</p>
-
+ 
         <input v-model="newProduct.name" type="text" placeholder="Tuotteen nimi" />
         <input v-model="newProduct.price" type="number" placeholder="Hinta (€)" />
         <input v-model="newProduct.stock" type="number" placeholder="Varaston määrä (kpl)" />
         <input v-model="newProduct.image" type="text" placeholder="Kuvan linkki (URL)" />
-
+ 
         <select v-model="newProduct.category">
           <option value="old">Vanhat tennarit</option>
           <option value="new">Uudet tennarit</option>
         </select>
-
+ 
         <div class="add-product-buttons">
           <button class="btn btn-back" @click="goToShop">Peruuta</button>
           <button class="btn btn-black" @click="submitNewProduct">Tallenna tuote</button>
         </div>
       </div>
     </div>
-
+ 
   </div>
 </template>
-
+ 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-
-// Backendin osoite
-const API_URL = 'https://verkkokauppa.onrender.com/api'
-
+ 
+// Backendin osoite.
+// VITE_API_URL voidaan asettaa .env-tiedostossa tai ympäristömuuttujana
+// (esim. testejä tai eri ympäristöjä varten) — tuotannossa käytetään oletusarvoa.
+const API_URL = import.meta.env.VITE_API_URL || 'https://verkkokauppa.onrender.com/api'
+// TEMP-DEBUG: щоб бачити в консолі браузера, на яку адресу реально йдуть запити.
+console.log('[verkkokauppa] API_URL =', API_URL)
+ 
 // ------------------------------
 // NAVIGOINTI
 // ------------------------------
@@ -213,17 +217,17 @@ const API_URL = 'https://verkkokauppa.onrender.com/api'
 // 'shop' -> tuoteluettelo, 'payment' -> tilauksen maksu
 const currentPage = ref('auth')
 const category = ref('old')
-
+ 
 function goHome() {
   currentPage.value = 'home'
 }
-
+ 
 function openShop(type) {
   category.value = type
   currentPage.value = 'shop'
   loadProducts()
 }
-
+ 
 // ------------------------------
 // KIRJAUTUMINEN
 // ------------------------------
@@ -232,18 +236,18 @@ const user = ref(JSON.parse(localStorage.getItem('user') || 'null'))
 const authMode = ref('login') // 'login' tai 'register'
 const authForm = ref({ name: '', email: '', password: '' })
 const authError = ref('')
-
+ 
 // Jos token on jo tallennettu selaimeen — päästetään suoraan etusivulle
 onMounted(() => {
   if (token.value && user.value) {
     currentPage.value = 'home'
   }
 })
-
+ 
 async function submitAuth() {
   authError.value = ''
   const endpoint = authMode.value === 'login' ? 'login' : 'register'
-
+ 
   try {
     const response = await fetch(`${API_URL}/auth/${endpoint}`, {
       method: 'POST',
@@ -251,24 +255,24 @@ async function submitAuth() {
       body: JSON.stringify(authForm.value),
     })
     const data = await response.json()
-
+ 
     if (!response.ok) {
       authError.value = data.error || 'Tapahtui virhe'
       return
     }
-
+ 
     // Tallennetaan token ja käyttäjä localStorageen, ettei tarvitse kirjautua joka kerta
     token.value = data.token
     user.value = data.user
     localStorage.setItem('token', data.token)
     localStorage.setItem('user', JSON.stringify(data.user))
-
+ 
     currentPage.value = 'home'
   } catch (err) {
     authError.value = 'Yhteys palvelimeen epäonnistui'
   }
 }
-
+ 
 function logout() {
   token.value = ''
   user.value = null
@@ -276,7 +280,7 @@ function logout() {
   localStorage.removeItem('user')
   currentPage.value = 'auth'
 }
-
+ 
 // Apufunktio: pyynnön otsikot tokenilla suojattuihin pyyntöihin
 function authHeaders() {
   return {
@@ -284,13 +288,13 @@ function authHeaders() {
     Authorization: `Bearer ${token.value}`,
   }
 }
-
+ 
 // ------------------------------
 // TUOTTEET (haetaan palvelimelta)
 // ------------------------------
 const products = ref([])
 const loadingProducts = ref(false)
-
+ 
 async function loadProducts() {
   loadingProducts.value = true
   try {
@@ -300,41 +304,41 @@ async function loadProducts() {
     loadingProducts.value = false
   }
 }
-
+ 
 // ------------------------------
 // OSTOSKORI (tallennetaan toistaiseksi vain selaimen muistiin)
 // ------------------------------
 const cart = ref([])
-
+ 
 function addToCart(product) {
   // Lasketaan, kuinka monta tätä tuotetta on jo ostoskorissa,
   // jotta emme anna lisätä enempää kuin varastossa on jäljellä.
   const alreadyInCart = cart.value.filter((item) => item._id === product._id).length
-
+ 
   if (alreadyInCart >= product.stock) {
     alert(`Valitettavasti tuotetta "${product.name}" on varastossa vain ${product.stock} kpl`)
     return
   }
-
+ 
   cart.value.push(product)
 }
-
+ 
 function clearCart() {
   cart.value = []
 }
-
+ 
 const totalItemsInCart = computed(() => cart.value.length)
 const totalPrice = computed(() => cart.value.reduce((sum, item) => sum + item.price, 0))
-
+ 
 // ------------------------------
 // TILAUKSEN TEKO JA MAKSU
 // ------------------------------
 const activeOrder = ref(null)
 const checkoutError = ref('')
-
+ 
 async function checkout() {
   checkoutError.value = ''
-
+ 
   // Lasketaan kunkin tuotteen määrä ostoskorissa palvelinta varten
   // (MongoDB:n _id on merkkijono, ei numero — siksi ei muunneta Number():ksi)
   const itemsMap = {}
@@ -345,7 +349,7 @@ async function checkout() {
     productId,
     quantity,
   }))
-
+ 
   try {
     const response = await fetch(`${API_URL}/orders`, {
       method: 'POST',
@@ -353,12 +357,12 @@ async function checkout() {
       body: JSON.stringify({ items }),
     })
     const data = await response.json()
-
+ 
     if (!response.ok) {
       checkoutError.value = data.error || 'Tilauksen teko epäonnistui'
       return
     }
-
+ 
     activeOrder.value = data
     cart.value = [] // tyhjennetään ostoskori tilauksen jälkeen
     currentPage.value = 'payment'
@@ -366,7 +370,7 @@ async function checkout() {
     checkoutError.value = 'Yhteys palvelimeen epäonnistui'
   }
 }
-
+ 
 async function payForOrder() {
   const response = await fetch(`${API_URL}/orders/${activeOrder.value._id}/pay`, {
     method: 'POST',
@@ -377,14 +381,14 @@ async function payForOrder() {
     activeOrder.value = data
   }
 }
-
+ 
 // ------------------------------
 // UUDEN TUOTTEEN LISÄYS
 // ------------------------------
 const newProduct = ref({ name: '', price: '', stock: '', image: '', category: 'old' })
 const addProductError = ref('')
 const addProductSuccess = ref(false)
-
+ 
 function openAddProduct() {
   addProductError.value = ''
   addProductSuccess.value = false
@@ -392,15 +396,15 @@ function openAddProduct() {
   newProduct.value = { name: '', price: '', stock: '', image: '', category: category.value }
   currentPage.value = 'addProduct'
 }
-
+ 
 function goToShop() {
   currentPage.value = 'shop'
 }
-
+ 
 async function submitNewProduct() {
   addProductError.value = ''
   addProductSuccess.value = false
-
+ 
   try {
     const response = await fetch(`${API_URL}/products`, {
       method: 'POST',
@@ -408,12 +412,12 @@ async function submitNewProduct() {
       body: JSON.stringify(newProduct.value),
     })
     const data = await response.json()
-
+ 
     if (!response.ok) {
       addProductError.value = data.error || 'Tuotteen lisäys epäonnistui'
       return
     }
-
+ 
     addProductSuccess.value = true
     category.value = data.category // varmistetaan oikea kategoria näkyville
     await loadProducts() // päivitetään lista, jotta uusi tuote näkyy heti
@@ -423,7 +427,7 @@ async function submitNewProduct() {
   }
 }
 </script>
-
+ 
 <style>
 * {
   box-sizing: border-box;
@@ -435,7 +439,7 @@ body {
 #app {
   min-height: 100vh;
 }
-
+ 
 /* ---------- Kirjautuminen ---------- */
 .auth-screen {
   min-height: 100vh;
@@ -467,7 +471,7 @@ body {
   margin-top: 14px;
   font-size: 0.9rem;
 }
-
+ 
 /* ---------- Kategorian valinta ---------- */
 .user-bar {
   display: flex;
@@ -521,7 +525,7 @@ body {
   font-size: 1.1rem;
   line-height: 1.5;
 }
-
+ 
 /* ---------- Napit ---------- */
 .btn {
   padding: 12px 28px;
@@ -567,7 +571,7 @@ body {
   gap: 12px;
   margin-top: 12px;
 }
-
+ 
 /* ---------- Kauppa ---------- */
 .shop-screen {
   padding: 24px;
@@ -618,7 +622,7 @@ body {
   border-top: 2px solid #e0e0e0;
   padding-top: 20px;
 }
-
+ 
 /* ---------- Varastotilanne ---------- */
 .product-image {
   position: relative;
@@ -659,7 +663,7 @@ body {
   color: #fff;
   margin-bottom: 20px;
 }
-
+ 
 /* ---------- Uuden tuotteen lisäys ---------- */
 .add-product-screen {
   min-height: 100vh;
@@ -690,7 +694,7 @@ body {
   justify-content: center;
   margin-top: 8px;
 }
-
+ 
 /* ---------- Maksu ---------- */
 .payment-screen {
   min-height: 100vh;
@@ -719,10 +723,11 @@ body {
   font-weight: 700;
   margin: 16px 0;
 }
-
+ 
 @media (max-width: 700px) {
   .choice-halves {
     flex-direction: column;
   }
 }
 </style>
+ 
