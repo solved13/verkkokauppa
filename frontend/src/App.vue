@@ -207,8 +207,7 @@ import { ref, computed, onMounted } from 'vue'
 // VITE_API_URL voidaan asettaa .env-tiedostossa tai ympäristömuuttujana
 // (esim. testejä tai eri ympäristöjä varten) — tuotannossa käytetään oletusarvoa.
 const API_URL = import.meta.env.VITE_API_URL || 'https://verkkokauppa.onrender.com/api'
-// TEMP-DEBUG: щоб бачити в консолі браузера, на яку адресу реально йдуть запити.
-console.log('[verkkokauppa] API_URL =', API_URL)
+
  
 // ------------------------------
 // NAVIGOINTI
