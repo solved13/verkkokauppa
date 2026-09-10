@@ -819,6 +819,11 @@ body {
 .wishlist-btn-active:hover {
   transform: scale(1.14) rotate(-6deg);
 }
+.edit-product-btn {
+  left: 8px;
+  right: auto;
+  font-size: 15px;
+}
 
 /* ---------- Uuden tuotteen lisäys ---------- */
 .add-product-screen {

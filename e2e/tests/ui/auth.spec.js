@@ -5,13 +5,13 @@ function uniqueEmail(tag) {
   return `${tag}.${Date.now()}.${Math.floor(Math.random() * 100000)}@example.com`
 }
 
-test.describe('Автентифікація (UI)', () => {
-  test('нова людина може зареєструватись через форму і потрапляє на головну', async ({ page }) => {
+test.describe('Authentication (UI)', () => {
+  test('new user can register through the form and is redirected to the home page', async ({ page }) => {
     const email = uniqueEmail('ui-register')
 
     await page.goto('/')
 
-    // На старті відкрита форма логіну — перемикаємось на реєстрацію
+    // The login form is open initially — switch to registration
     await page.getByRole('link', { name: 'Rekisteröidy' }).click()
 
     await page.getByPlaceholder('Nimi').fill('Testi Käyttäjä')
@@ -22,12 +22,12 @@ test.describe('Автентифікація (UI)', () => {
     await expect(page.getByText(/Hei, Testi Käyttäjä/)).toBeVisible()
   })
 
-  test('вже зареєстрований користувач може увійти через форму логіну', async ({ page, request }) => {
+  test('already registered user can log in through the login form', async ({ page, request }) => {
     const email = uniqueEmail('ui-login')
     const password = 'PravidniyParol123'
 
     await request.post(`${BACKEND_URL}/api/auth/register`, {
-      data: { name: 'Логін Тест', email, password },
+      data: { name: 'Login Test', email, password },
     })
 
     await page.goto('/')
@@ -35,14 +35,14 @@ test.describe('Автентифікація (UI)', () => {
     await page.getByPlaceholder('Salasana').fill(password)
     await page.getByRole('button', { name: 'Kirjaudu' }).click()
 
-    await expect(page.getByText(/Hei, Логін Тест/)).toBeVisible()
+    await expect(page.getByText(/Hei, Login Test/)).toBeVisible()
   })
 
-  test('невірний пароль показує повідомлення про помилку і не пускає далі', async ({ page, request }) => {
+  test('incorrect password displays an error message and does not allow access', async ({ page, request }) => {
     const email = uniqueEmail('ui-wrong-pass')
 
     await request.post(`${BACKEND_URL}/api/auth/register`, {
-      data: { name: 'Помилка Тест', email, password: 'PravidniyParol123' },
+      data: { name: 'Error Test', email, password: 'PravidniyParol123' },
     })
 
     await page.goto('/')
@@ -51,11 +51,11 @@ test.describe('Автентифікація (UI)', () => {
     await page.getByRole('button', { name: 'Kirjaudu' }).click()
 
     await expect(page.getByText('Väärä sähköposti tai salasana')).toBeVisible()
-    // все ще на екрані логіну, не потрапили на головну
+    // Still on the login screen, did not reach the home page
     await expect(page.getByRole('button', { name: 'Kirjaudu' })).toBeVisible()
   })
 
-  test('перемикання між формами логіну і реєстрації працює в обидва боки', async ({ page }) => {
+  test('switching between login and registration forms works both ways', async ({ page }) => {
     await page.goto('/')
 
     await expect(page.getByRole('heading', { name: 'Kirjaudu sisään' })).toBeVisible()

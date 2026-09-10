@@ -3,7 +3,7 @@ import { BACKEND_URL } from '../../env.js'
 import { registerUser, registerAdmin, createProduct } from '../../helpers.js'
 
 test.describe('Orders API', () => {
-  test('оформлення замовлення зменшує залишок на складі', async ({ request }) => {
+  test('placing an order decreases the stock quantity', async ({ request }) => {
     const admin = await registerAdmin(request, 'orders-stock')
     const product = await createProduct(request, admin.token, { stock: 5, price: 40 })
     const buyer = await registerUser(request, 'orders-buyer')
@@ -23,7 +23,7 @@ test.describe('Orders API', () => {
     expect(updated.stock).toBe(3) // 5 - 2
   })
 
-  test('неможливо замовити більше, ніж є в наявності', async ({ request }) => {
+  test('cannot order more products than are available in stock', async ({ request }) => {
     const admin = await registerAdmin(request, 'orders-overstock')
     const product = await createProduct(request, admin.token, { stock: 1 })
     const buyer = await registerUser(request, 'orders-overstock-buyer')
@@ -37,14 +37,14 @@ test.describe('Orders API', () => {
     const body = await res.json()
     expect(body.error).toBeTruthy()
 
-    // і залишок на складі не мав змінитись
+    // The stock quantity should also remain unchanged
     const productsRes = await request.get(`${BACKEND_URL}/api/products?category=${product.category}`)
     const products = await productsRes.json()
     const unchanged = products.find((p) => p._id === product._id)
     expect(unchanged.stock).toBe(1)
   })
 
-  test('порожній кошик неможливо оформити — 400', async ({ request }) => {
+  test('cannot place an order with an empty cart — 400', async ({ request }) => {
     const buyer = await registerUser(request, 'orders-empty')
 
     const res = await request.post(`${BACKEND_URL}/api/orders`, {
@@ -55,14 +55,14 @@ test.describe('Orders API', () => {
     expect(res.status()).toBe(400)
   })
 
-  test('без токена замовлення оформити неможливо — 401', async ({ request }) => {
+  test('cannot place an order without a token — 401', async ({ request }) => {
     const res = await request.post(`${BACKEND_URL}/api/orders`, {
       data: { items: [{ productId: '000000000000000000000000', quantity: 1 }] },
     })
     expect(res.status()).toBe(401)
   })
 
-  test('оплата (pay) переводить замовлення у статус "maksettu"', async ({ request }) => {
+  test('payment (pay) changes the order status to "maksettu"', async ({ request }) => {
     const admin = await registerAdmin(request, 'orders-pay')
     const product = await createProduct(request, admin.token, { stock: 3, price: 20 })
     const buyer = await registerUser(request, 'orders-pay-buyer')
@@ -82,7 +82,7 @@ test.describe('Orders API', () => {
     expect(paid.paidAt).toBeTruthy()
   })
 
-  test('чужого замовлення оплатити не можна — 404', async ({ request }) => {
+  test('cannot pay for another user’s order — 404', async ({ request }) => {
     const admin = await registerAdmin(request, 'orders-foreign')
     const product = await createProduct(request, admin.token, { stock: 3, price: 15 })
     const owner = await registerUser(request, 'orders-foreign-owner')
@@ -100,7 +100,7 @@ test.describe('Orders API', () => {
     expect(payRes.status()).toBe(404)
   })
 
-  test('GET /api/orders повертає тільки власні замовлення', async ({ request }) => {
+  test('GET /api/orders returns only the user’s own orders', async ({ request }) => {
     const admin = await registerAdmin(request, 'orders-list')
     const product = await createProduct(request, admin.token, { stock: 5, price: 10 })
     const buyerA = await registerUser(request, 'orders-list-a')

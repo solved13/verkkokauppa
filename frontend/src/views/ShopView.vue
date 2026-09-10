@@ -25,7 +25,12 @@
           + Lisää uusi tuote
         </button>
 
-        <p v-if="loadingProducts" class="loading-text">Ladataan tuotteita…</p>
+        <p
+          v-if="loadingProducts || (showWishlistOnly && loadingWishlistProducts)"
+          class="loading-text"
+        >
+          Ladataan tuotteita…
+        </p>
 
         <div v-else-if="visibleProducts.length === 0" class="empty-state">
           <p v-if="showWishlistOnly">Suosikkilista on tyhjä. Paina ♥ tuotekortilla lisätäksesi.</p>
@@ -78,6 +83,16 @@
                       stroke-linejoin="round"
                     />
                   </svg>
+                </button>
+
+                <!-- Muokkausnappi, näkyy vain adminille -->
+                <button
+                  v-if="user?.isAdmin"
+                  class="wishlist-btn edit-product-btn"
+                  title="Muokkaa tuotetta"
+                  @click.stop="goToEditProduct(product)"
+                >
+                  ✏️
                 </button>
               </div>
 
@@ -227,6 +242,9 @@ import {
   loadingProducts,
   loadProducts,
   wishlist,
+  wishlistProducts,
+  loadingWishlistProducts,
+  loadWishlistProducts,
   isWishlisted,
   toggleWishlist,
   cart,
@@ -245,12 +263,25 @@ const category = computed(() => route.params.category)
 // ------------------------------
 // SUODATUS JA JÄRJESTÄMINEN
 // ------------------------------
-const showWishlistOnly = ref(false)
+// Etusivun "♥" -painike ohjaa tänne ?wishlist=1 -parametrilla, jolloin
+// suosikkisuodatin avataan heti.
+const showWishlistOnly = ref(route.query.wishlist === '1')
 const sortBy = ref('default')
+
+// Suosikkeja voi olla myös muissa kategorioissa kuin se, jota juuri nyt
+// selataan, joten suosikkinäkymää varten haetaan tuotteet yli kaikkien
+// kategorioiden sen sijaan, että suodatettaisiin vain nykyisen kategorian listaa.
+watch(
+  showWishlistOnly,
+  (isOn) => {
+    if (isOn) loadWishlistProducts()
+  },
+  { immediate: true }
+)
 
 const visibleProducts = computed(() => {
   let list = showWishlistOnly.value
-    ? products.value.filter((product) => isWishlisted(product))
+    ? wishlistProducts.value.filter((product) => isWishlisted(product))
     : products.value
 
   if (sortBy.value === 'price-asc') {
@@ -305,20 +336,23 @@ async function handleCheckout() {
   router.push('/payment')
 }
 
+// Ladataan ensimmäisen näytön tuotteet.
+loadProducts(category.value)
+
 // Kun kategoria vaihtuu URL:ssa (esim. /shop/old -> /shop/new), nollataan
 // näytön oma tila ja ladataan uuden kategorian tuotteet palvelimelta.
-watch(
-  category,
-  (newCategory) => {
-    showWishlistOnly.value = false
-    showCart.value = false
-    selectedProduct.value = null
-    loadProducts(newCategory)
-  },
-  { immediate: true }
-)
+watch(category, (newCategory) => {
+  showWishlistOnly.value = false
+  showCart.value = false
+  selectedProduct.value = null
+  loadProducts(newCategory)
+})
 
 function goToAddProduct() {
   router.push({ path: '/admin/products/new', query: { category: category.value } })
+}
+
+function goToEditProduct(product) {
+  router.push(`/admin/products/${product._id}/edit`)
 }
 </script>

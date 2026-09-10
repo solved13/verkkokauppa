@@ -32,6 +32,12 @@ const routes = [
     component: () => import('../views/AddProductView.vue'),
     meta: { requiresAuth: true, requiresAdmin: true },
   },
+  {
+    path: '/admin/products/:id/edit',
+    name: 'editProduct',
+    component: () => import('../views/AddProductView.vue'),
+    meta: { requiresAuth: true, requiresAdmin: true },
+  },
   // Tuntemattomat osoitteet -> etusivulle (joka ohjaa kirjautumiseen, jos ei olla sisäänkirjautuneita)
   { path: '/:pathMatch(.*)*', redirect: '/' },
 ]

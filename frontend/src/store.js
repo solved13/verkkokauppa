@@ -69,10 +69,36 @@ export async function loadProducts(category) {
   }
 }
 
+export async function fetchProductById(id) {
+  const response = await fetch(`${API_URL}/products/${id}`)
+  const data = await response.json()
+
+  if (!response.ok) {
+    return { ok: false, error: data.error || 'Tuotteen haku epäonnistui' }
+  }
+
+  return { ok: true, product: data }
+}
+
 // ------------------------------
 // SUOSIKIT (tallennetaan selaimen muistiin, säilyy sivun päivityksen yli)
 // ------------------------------
 export const wishlist = ref(JSON.parse(localStorage.getItem('wishlist') || '[]'))
+
+// Suosikkituotteet voivat olla eri kategoriasta kuin se, jota käyttäjä
+// parhaillaan selaa, joten ne haetaan erikseen yli kaikkien kategorioiden.
+export const wishlistProducts = ref([])
+export const loadingWishlistProducts = ref(false)
+
+export async function loadWishlistProducts() {
+  loadingWishlistProducts.value = true
+  try {
+    const response = await fetch(`${API_URL}/products`)
+    wishlistProducts.value = await response.json()
+  } finally {
+    loadingWishlistProducts.value = false
+  }
+}
 
 export function isWishlisted(product) {
   return wishlist.value.includes(product._id)
@@ -178,6 +204,48 @@ export async function submitProduct(payload) {
 
     await loadProducts(data.category) // päivitetään lista, jotta uusi tuote näkyy heti
     return { ok: true, product: data }
+  } catch (err) {
+    return { ok: false, error: 'Yhteys palvelimeen epäonnistui' }
+  }
+}
+
+// ------------------------------
+// TUOTTEEN MUOKKAUS JA POISTO
+// ------------------------------
+export async function updateProduct(id, payload) {
+  try {
+    const response = await fetch(`${API_URL}/products/${id}`, {
+      method: 'PUT',
+      headers: authHeaders(),
+      body: JSON.stringify(payload),
+    })
+    const data = await response.json()
+
+    if (!response.ok) {
+      return { ok: false, error: data.error || 'Tuotteen muokkaus epäonnistui' }
+    }
+
+    await loadProducts(data.category) // päivitetään lista, jotta muutokset näkyvät heti
+    return { ok: true, product: data }
+  } catch (err) {
+    return { ok: false, error: 'Yhteys palvelimeen epäonnistui' }
+  }
+}
+
+export async function deleteProduct(id, category) {
+  try {
+    const response = await fetch(`${API_URL}/products/${id}`, {
+      method: 'DELETE',
+      headers: authHeaders(),
+    })
+    const data = await response.json()
+
+    if (!response.ok) {
+      return { ok: false, error: data.error || 'Tuotteen poisto epäonnistui' }
+    }
+
+    await loadProducts(category) // päivitetään lista, jotta poistettu tuote katoaa heti
+    return { ok: true }
   } catch (err) {
     return { ok: false, error: 'Yhteys palvelimeen epäonnistui' }
   }

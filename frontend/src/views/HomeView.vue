@@ -7,7 +7,9 @@
       <div class="user-bar-right">
         <span class="hello-text">Hei, {{ user?.name }}!</span>
         <span v-if="user?.isAdmin" class="admin-badge">Ylläpitäjä</span>
-        <button v-if="wishlist.length" class="btn btn-ghost btn-sm">♥ {{ wishlist.length }}</button>
+        <button v-if="wishlist.length" class="btn btn-ghost btn-sm" @click="goToWishlist">
+          ♥ {{ wishlist.length }}
+        </button>
         <button class="btn btn-back" @click="handleLogout">Kirjaudu ulos</button>
       </div>
     </div>
@@ -46,6 +48,10 @@ const router = useRouter()
 
 function openShop(type) {
   router.push(`/shop/${type}`)
+}
+
+function goToWishlist() {
+  router.push({ path: '/shop/new', query: { wishlist: '1' } })
 }
 
 function handleLogout() {
