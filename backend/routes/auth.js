@@ -2,7 +2,7 @@ import { Router } from 'express'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import User from '../models/User.js'
-import { JWT_SECRET } from '../middleware/auth.js'
+import { getJwtSecret } from '../middleware/auth.js'
 
 const router = Router()
 
@@ -28,7 +28,7 @@ router.post('/register', async (req, res) => {
 
     const newUser = await User.create({ name, email, passwordHash, isAdmin })
 
-    const token = jwt.sign({ userId: newUser._id }, JWT_SECRET, { expiresIn: '7d' })
+    const token = jwt.sign({ userId: newUser._id }, getJwtSecret(), { expiresIn: '7d' })
 
     res.json({
       token,
@@ -54,7 +54,7 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ error: 'Väärä sähköposti tai salasana' })
     }
 
-    const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '7d' })
+    const token = jwt.sign({ userId: user._id }, getJwtSecret(), { expiresIn: '7d' })
 
     res.json({
       token,

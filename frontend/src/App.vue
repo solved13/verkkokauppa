@@ -1,691 +1,900 @@
 <template>
   <div id="app">
- 
-    <!-- ===================== -->
-    <!-- NÄYTTÖ 0: KIRJAUTUMINEN/REKISTERÖINTI -->
-    <!-- ===================== -->
-    <div v-if="currentPage === 'auth'" class="auth-screen">
-      <div class="auth-box">
-        <h2>{{ authMode === 'login' ? 'Kirjaudu sisään' : 'Rekisteröidy' }}</h2>
- 
-        <p v-if="authError" class="auth-error">{{ authError }}</p>
- 
-        <input
-          v-if="authMode === 'register'"
-          v-model="authForm.name"
-          type="text"
-          placeholder="Nimi"
-        />
-        <input v-model="authForm.email" type="email" placeholder="Sähköposti" />
-        <input v-model="authForm.password" type="password" placeholder="Salasana" />
- 
-        <button class="btn btn-black" @click="submitAuth">
-          {{ authMode === 'login' ? 'Kirjaudu' : 'Rekisteröidy' }}
-        </button>
- 
-        <p class="auth-switch">
-          <span v-if="authMode === 'login'">
-            Ei vielä tiliä?
-            <a href="#" @click.prevent="authMode = 'register'">Rekisteröidy</a>
-          </span>
-          <span v-else>
-            Onko sinulla jo tili?
-            <a href="#" @click.prevent="authMode = 'login'">Kirjaudu sisään</a>
-          </span>
-        </p>
-      </div>
-    </div>
- 
-    <!-- ===================== -->
-    <!-- NÄYTTÖ 1: VALINTA VANHAT/UUDET -->
-    <!-- ===================== -->
-    <div v-if="currentPage === 'home'" class="choice-screen">
-      <div class="user-bar">
-        Hei, {{ user?.name }}!
-        <span v-if="user?.isAdmin" class="admin-badge">Ylläpitäjä</span>
-        <button class="btn btn-back" @click="logout">Kirjaudu ulos</button>
-      </div>
- 
-      <div class="choice-halves">
-        <div class="choice-half choice-black" @click="openShop('old')">
-          <h1 class="choice-title">VANHOJA TENNAREITA</h1>
-          <p class="choice-desc">
-            Klassisia malleja historialla. Todistettua laatua edulliseen hintaan.
-          </p>
-          <button class="btn btn-white" @click.stop="openShop('old')">
-            Mene kauppaan
-          </button>
-        </div>
- 
-        <div class="choice-half choice-white" @click="openShop('new')">
-          <h1 class="choice-title">UUDET TENNARIT</h1>
-          <p class="choice-desc">
-            Kauden uusimmat julkaisut. Modernia muotoilua ja teknologiaa.
-          </p>
-          <button class="btn btn-black" @click.stop="openShop('new')">
-            Mene kauppaan
-          </button>
-        </div>
-      </div>
-    </div>
- 
-    <!-- ===================== -->
-    <!-- NÄYTTÖ 2: TUOTELUETTELO -->
-    <!-- ===================== -->
-    <div v-if="currentPage === 'shop'" class="shop-screen">
-      <header class="shop-header">
-        <button class="btn btn-back" @click="goHome">← Takaisin</button>
-        <h2 class="shop-title">
-          {{ category === 'old' ? 'Käytettyjen tennareiden kauppa' : 'Uusien tennareiden kauppa' }}
-        </h2>
-        <div class="cart-summary">
-          🛒 {{ totalItemsInCart }} kpl — {{ totalPrice }} €
-        </div>
-      </header>
- 
-      <button v-if="user?.isAdmin" class="btn btn-add-product" @click="openAddProduct">
-        + Lisää uusi tuote
-      </button>
- 
-      <p v-if="loadingProducts">Ladataan tuotteita…</p>
- 
-      <div v-else class="products-grid">
-        <div v-for="product in products" :key="product._id" class="product-card">
-          <!-- Tuotekuva ladataan internetistä annetusta linkistä -->
-          <div class="product-image">
-            <img :src="product.image" :alt="product.name" class="product-photo" />
-            <!-- Merkki "loppuunmyyty", jos tuotetta ei ole varastossa -->
-            <span v-if="product.stock === 0" class="stock-badge stock-out">Loppuunmyyty</span>
-          </div>
-          <h3 class="product-name">{{ product.name }}</h3>
-          <p class="product-price">{{ product.price }} €</p>
- 
-          <!-- Varastotilanne: näytetään eri väreillä riippuen jäljellä olevasta määrästä -->
-          <p
-            class="stock-info"
-            :class="{
-              'stock-low': product.stock > 0 && product.stock <= 3,
-              'stock-zero': product.stock === 0,
-            }"
-          >
-            <span v-if="product.stock === 0">Ei varastossa</span>
-            <span v-else-if="product.stock <= 3">⚠️ Loppumassa! Jäljellä {{ product.stock }} kpl</span>
-            <span v-else>Varastossa {{ product.stock }} kpl</span>
-          </p>
- 
-          <button
-            class="btn btn-add"
-            :disabled="product.stock === 0"
-            @click="addToCart(product)"
-          >
-            {{ product.stock === 0 ? 'Ei saatavilla' : 'Lisää ostoskoriin' }}
-          </button>
-        </div>
-      </div>
- 
-      <div class="cart-box">
-        <h3>Ostoskori</h3>
-        <p v-if="cart.length === 0">Ostoskori on tyhjä</p>
-        <ul v-else class="cart-list">
-          <li v-for="(item, index) in cart" :key="index">{{ item.name }} — {{ item.price }} €</li>
-        </ul>
- 
-        <p class="cart-total">
-          Tuotteiden määrä: {{ totalItemsInCart }}<br />
-          Summa yhteensä: {{ totalPrice }} €
-        </p>
- 
-        <div class="cart-buttons" v-if="cart.length > 0">
-          <button class="btn btn-clear" @click="clearCart">Tyhjennä ostoskori</button>
-          <button class="btn btn-checkout" @click="checkout">Tee tilaus</button>
-        </div>
- 
-        <p v-if="checkoutError" class="auth-error">{{ checkoutError }}</p>
-      </div>
-    </div>
- 
-    <!-- ===================== -->
-    <!-- NÄYTTÖ 3: TILAUKSEN MAKSU -->
-    <!-- ===================== -->
-    <div v-if="currentPage === 'payment'" class="payment-screen">
-      <div class="payment-box">
-        <h2>Tilaus nro {{ activeOrder._id }}</h2>
-        <p>Maksettava summa: <strong>{{ activeOrder.total }} €</strong></p>
-        <p>Tila: {{ activeOrder.status }}</p>
- 
-        <!-- Tämä on maksun SIMULAATIO opetustarkoitukseen. -->
-        <p class="payment-note">
-          ⚠️ Tämä on opetustarkoitukseen tehty maksun simulaatio. Oikeita maksutietoja
-          ei kerätä — oikeaan maksujen vastaanottoon käytetään palveluita kuten
-          Stripe / Paytrail / Klarna.
-        </p>
- 
-        <button class="btn btn-black" @click="payForOrder" v-if="activeOrder.status !== 'maksettu'">
-          Simuloi maksu
-        </button>
- 
-        <p v-else class="payment-success">✅ Tilaus on maksettu!</p>
- 
-        <button class="btn btn-back" @click="goHome">Etusivulle</button>
-      </div>
-    </div>
- 
-    <!-- ===================== -->
-    <!-- NÄYTTÖ 4: UUDEN TUOTTEEN LISÄYS -->
-    <!-- ===================== -->
-    <div v-if="currentPage === 'addProduct'" class="add-product-screen">
-      <div class="add-product-box">
-        <h2>Lisää uusi tuote</h2>
- 
-        <p v-if="addProductError" class="auth-error">{{ addProductError }}</p>
-        <p v-if="addProductSuccess" class="payment-success">✅ Tuote lisätty!</p>
- 
-        <input v-model="newProduct.name" type="text" placeholder="Tuotteen nimi" />
-        <input v-model="newProduct.price" type="number" placeholder="Hinta (€)" />
-        <input v-model="newProduct.stock" type="number" placeholder="Varaston määrä (kpl)" />
-        <input v-model="newProduct.image" type="text" placeholder="Kuvan linkki (URL)" />
- 
-        <select v-model="newProduct.category">
-          <option value="old">Vanhat tennarit</option>
-          <option value="new">Uudet tennarit</option>
-        </select>
- 
-        <div class="add-product-buttons">
-          <button class="btn btn-back" @click="goToShop">Peruuta</button>
-          <button class="btn btn-black" @click="submitNewProduct">Tallenna tuote</button>
-        </div>
-      </div>
-    </div>
- 
+    <router-view />
   </div>
 </template>
- 
-<script setup>
-import { ref, computed, onMounted } from 'vue'
- 
-// Backendin osoite.
-// VITE_API_URL voidaan asettaa .env-tiedostossa tai ympäristömuuttujana
-// (esim. testejä tai eri ympäristöjä varten) — tuotannossa käytetään oletusarvoa.
-const API_URL = import.meta.env.VITE_API_URL || 'https://verkkokauppa.onrender.com/api'
 
- 
-// ------------------------------
-// NAVIGOINTI
-// ------------------------------
-// 'auth' -> kirjautuminen/rekisteröinti, 'home' -> kategorian valinta,
-// 'shop' -> tuoteluettelo, 'payment' -> tilauksen maksu
-const currentPage = ref('auth')
-const category = ref('old')
- 
-function goHome() {
-  currentPage.value = 'home'
-}
- 
-function openShop(type) {
-  category.value = type
-  currentPage.value = 'shop'
-  loadProducts()
-}
- 
-// ------------------------------
-// KIRJAUTUMINEN
-// ------------------------------
-const token = ref(localStorage.getItem('token') || '')
-const user = ref(JSON.parse(localStorage.getItem('user') || 'null'))
-const authMode = ref('login') // 'login' tai 'register'
-const authForm = ref({ name: '', email: '', password: '' })
-const authError = ref('')
- 
-// Jos token on jo tallennettu selaimeen — päästetään suoraan etusivulle
-onMounted(() => {
-  if (token.value && user.value) {
-    currentPage.value = 'home'
-  }
-})
- 
-async function submitAuth() {
-  authError.value = ''
-  const endpoint = authMode.value === 'login' ? 'login' : 'register'
- 
-  try {
-    const response = await fetch(`${API_URL}/auth/${endpoint}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(authForm.value),
-    })
-    const data = await response.json()
- 
-    if (!response.ok) {
-      authError.value = data.error || 'Tapahtui virhe'
-      return
-    }
- 
-    // Tallennetaan token ja käyttäjä localStorageen, ettei tarvitse kirjautua joka kerta
-    token.value = data.token
-    user.value = data.user
-    localStorage.setItem('token', data.token)
-    localStorage.setItem('user', JSON.stringify(data.user))
- 
-    currentPage.value = 'home'
-  } catch (err) {
-    authError.value = 'Yhteys palvelimeen epäonnistui'
-  }
-}
- 
-function logout() {
-  token.value = ''
-  user.value = null
-  localStorage.removeItem('token')
-  localStorage.removeItem('user')
-  currentPage.value = 'auth'
-}
- 
-// Apufunktio: pyynnön otsikot tokenilla suojattuihin pyyntöihin
-function authHeaders() {
-  return {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${token.value}`,
-  }
-}
- 
-// ------------------------------
-// TUOTTEET (haetaan palvelimelta)
-// ------------------------------
-const products = ref([])
-const loadingProducts = ref(false)
- 
-async function loadProducts() {
-  loadingProducts.value = true
-  try {
-    const response = await fetch(`${API_URL}/products?category=${category.value}`)
-    products.value = await response.json()
-  } finally {
-    loadingProducts.value = false
-  }
-}
- 
-// ------------------------------
-// OSTOSKORI (tallennetaan toistaiseksi vain selaimen muistiin)
-// ------------------------------
-const cart = ref([])
- 
-function addToCart(product) {
-  // Lasketaan, kuinka monta tätä tuotetta on jo ostoskorissa,
-  // jotta emme anna lisätä enempää kuin varastossa on jäljellä.
-  const alreadyInCart = cart.value.filter((item) => item._id === product._id).length
- 
-  if (alreadyInCart >= product.stock) {
-    alert(`Valitettavasti tuotetta "${product.name}" on varastossa vain ${product.stock} kpl`)
-    return
-  }
- 
-  cart.value.push(product)
-}
- 
-function clearCart() {
-  cart.value = []
-}
- 
-const totalItemsInCart = computed(() => cart.value.length)
-const totalPrice = computed(() => cart.value.reduce((sum, item) => sum + item.price, 0))
- 
-// ------------------------------
-// TILAUKSEN TEKO JA MAKSU
-// ------------------------------
-const activeOrder = ref(null)
-const checkoutError = ref('')
- 
-async function checkout() {
-  checkoutError.value = ''
- 
-  // Lasketaan kunkin tuotteen määrä ostoskorissa palvelinta varten
-  // (MongoDB:n _id on merkkijono, ei numero — siksi ei muunneta Number():ksi)
-  const itemsMap = {}
-  for (const item of cart.value) {
-    itemsMap[item._id] = (itemsMap[item._id] || 0) + 1
-  }
-  const items = Object.entries(itemsMap).map(([productId, quantity]) => ({
-    productId,
-    quantity,
-  }))
- 
-  try {
-    const response = await fetch(`${API_URL}/orders`, {
-      method: 'POST',
-      headers: authHeaders(),
-      body: JSON.stringify({ items }),
-    })
-    const data = await response.json()
- 
-    if (!response.ok) {
-      checkoutError.value = data.error || 'Tilauksen teko epäonnistui'
-      return
-    }
- 
-    activeOrder.value = data
-    cart.value = [] // tyhjennetään ostoskori tilauksen jälkeen
-    currentPage.value = 'payment'
-  } catch (err) {
-    checkoutError.value = 'Yhteys palvelimeen epäonnistui'
-  }
-}
- 
-async function payForOrder() {
-  const response = await fetch(`${API_URL}/orders/${activeOrder.value._id}/pay`, {
-    method: 'POST',
-    headers: authHeaders(),
-  })
-  const data = await response.json()
-  if (response.ok) {
-    activeOrder.value = data
-  }
-}
- 
-// ------------------------------
-// UUDEN TUOTTEEN LISÄYS
-// ------------------------------
-const newProduct = ref({ name: '', price: '', stock: '', image: '', category: 'old' })
-const addProductError = ref('')
-const addProductSuccess = ref(false)
- 
-function openAddProduct() {
-  addProductError.value = ''
-  addProductSuccess.value = false
-  // Ehdotetaan oletuksena samaa kategoriaa, jota käyttäjä parhaillaan katsoo
-  newProduct.value = { name: '', price: '', stock: '', image: '', category: category.value }
-  currentPage.value = 'addProduct'
-}
- 
-function goToShop() {
-  currentPage.value = 'shop'
-}
- 
-async function submitNewProduct() {
-  addProductError.value = ''
-  addProductSuccess.value = false
- 
-  try {
-    const response = await fetch(`${API_URL}/products`, {
-      method: 'POST',
-      headers: authHeaders(),
-      body: JSON.stringify(newProduct.value),
-    })
-    const data = await response.json()
- 
-    if (!response.ok) {
-      addProductError.value = data.error || 'Tuotteen lisäys epäonnistui'
-      return
-    }
- 
-    addProductSuccess.value = true
-    category.value = data.category // varmistetaan oikea kategoria näkyville
-    await loadProducts() // päivitetään lista, jotta uusi tuote näkyy heti
-    currentPage.value = 'shop'
-  } catch (err) {
-    addProductError.value = 'Yhteys palvelimeen epäonnistui'
-  }
-}
-</script>
- 
 <style>
+:root {
+  color-scheme: light;
+  --black: #0d0d0d;
+  --black-soft: #1a1a1a;
+  --white: #ffffff;
+  --off-white: #f7f7f5;
+  --grey-100: #f0f0ee;
+  --grey-200: #e4e4e1;
+  --grey-400: #9a9a95;
+  --grey-600: #6b6b66;
+  --accent-red: #e11d3c;
+  --accent-green: #1f8a4c;
+  --accent-blue: #1656b0;
+  --radius: 14px;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.12);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 * {
   box-sizing: border-box;
 }
 body {
   margin: 0;
-  font-family: 'Segoe UI', Arial, sans-serif;
+  font-family: 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+  background-color: var(--off-white);
+  color: var(--black);
+  -webkit-font-smoothing: antialiased;
 }
 #app {
   min-height: 100vh;
 }
- 
+
+/* ---------- Brand ---------- */
+/* Sedun logon tyylin mukainen wordmark: pyöreä, lihava, pienillä kirjaimilla */
+.brand-mark {
+  display: inline-block;
+  font-family: 'Fredoka', 'Segoe UI', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 1.9rem;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--black);
+  margin-bottom: 22px;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: default;
+}
+.brand-mark.small {
+  font-size: 1.15rem;
+  margin-bottom: 0;
+}
+.brand-mark-link {
+  cursor: pointer;
+  transition: opacity 0.18s var(--ease);
+}
+.brand-mark-link:hover {
+  opacity: 0.7;
+}
+
 /* ---------- Kirjautuminen ---------- */
 .auth-screen {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #111;
+  background: radial-gradient(circle at 20% 20%, #262626 0%, var(--black) 60%);
+  padding: 24px;
 }
 .auth-box {
-  background: #fff;
-  padding: 32px;
-  border-radius: 10px;
-  width: 320px;
+  background: var(--white);
+  padding: 40px 32px;
+  border-radius: 20px;
+  width: 340px;
   text-align: center;
+  box-shadow: var(--shadow-md);
+}
+.auth-box h2 {
+  margin: 0 0 20px;
+  font-size: 1.5rem;
+}
+.field {
+  margin-bottom: 4px;
 }
 .auth-box input {
   width: 100%;
-  padding: 10px;
-  margin-bottom: 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 1rem;
+  padding: 13px 14px;
+  margin-bottom: 14px;
+  border: 1.5px solid var(--grey-200);
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: var(--black);
+  transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+  background: var(--off-white);
+}
+.auth-box input:focus {
+  outline: none;
+  border-color: var(--black);
+  box-shadow: 0 0 0 3px rgba(13, 13, 13, 0.08);
+  background: var(--white);
 }
 .auth-error {
-  color: #c62828;
-  font-size: 0.9rem;
+  color: var(--accent-red);
+  font-size: 0.88rem;
+  background: #fdecee;
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-bottom: 14px;
 }
 .auth-switch {
-  margin-top: 14px;
-  font-size: 0.9rem;
+  margin-top: 18px;
+  font-size: 0.88rem;
+  color: var(--grey-600);
 }
- 
+.auth-switch a {
+  color: var(--black);
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom: 1.5px solid var(--black);
+  transition: opacity 0.2s ease;
+}
+.auth-switch a:hover {
+  opacity: 0.6;
+}
+
 /* ---------- Kategorian valinta ---------- */
+.choice-screen {
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
 .user-bar {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   gap: 12px;
-  padding: 12px 20px;
-  background: #f0f0f0;
+  padding: 14px 28px;
+  background: var(--white);
+  border-bottom: 1px solid var(--grey-200);
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+.user-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.hello-text {
+  font-weight: 600;
+  color: var(--grey-600);
 }
 .admin-badge {
-  background-color: #1565c0;
+  background: linear-gradient(135deg, var(--accent-blue), #1656b0);
   color: #fff;
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-size: 0.8rem;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
   font-weight: 700;
+  letter-spacing: 0.03em;
 }
 .choice-halves {
   display: flex;
-  min-height: calc(100vh - 56px);
+  flex: 1;
+  min-height: 0;
 }
 .choice-half {
   flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 40px;
+  padding: clamp(20px, 4vw, 48px);
   cursor: pointer;
-  transition: filter 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  transition: flex-grow 0.4s var(--ease);
+}
+.choice-half::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.35s var(--ease);
+  pointer-events: none;
+}
+.choice-black::before {
+  background: radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.08), transparent 60%);
+}
+.choice-white::before {
+  background: radial-gradient(circle at 50% 30%, rgba(0, 0, 0, 0.05), transparent 60%);
+}
+.choice-half:hover::before {
+  opacity: 1;
 }
 .choice-half:hover {
-  filter: brightness(1.15);
+  flex-grow: 1.08;
 }
 .choice-black {
-  background-color: #111111;
-  color: #ffffff;
+  background-color: var(--black);
+  color: var(--white);
 }
 .choice-white {
-  background-color: #f5f5f5;
-  color: #111111;
+  background-color: var(--off-white);
+  color: var(--black);
+}
+.choice-tag {
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+  border: 1px solid currentColor;
+  opacity: 0.85;
 }
 .choice-title {
-  font-size: 2.5rem;
-  margin-bottom: 16px;
+  font-size: clamp(1.5rem, 3.2vw + 1rem, 2.6rem);
+  margin: 0 0 clamp(8px, 2vh, 16px);
+  letter-spacing: -0.01em;
+  z-index: 1;
+  /* Väri annetaan aina suoraan (ei vain perittynä), koska osa selaimista
+     himmentää suuren/lihavoidun otsikkotekstin harmaaksi automaattisen
+     tummuustilan heuristiikalla, vaikka taustan väri olisi jo tumma. */
+  color: inherit;
+}
+.choice-black .choice-title {
+  color: var(--white);
+}
+.choice-white .choice-title {
+  color: var(--black);
 }
 .choice-desc {
-  max-width: 320px;
-  margin-bottom: 32px;
-  font-size: 1.1rem;
-  line-height: 1.5;
+  max-width: 340px;
+  margin-bottom: clamp(16px, 3vh, 32px);
+  font-size: clamp(0.85rem, 1vw + 0.6rem, 1.05rem);
+  line-height: 1.6;
+  opacity: 0.85;
+  z-index: 1;
 }
- 
+.btn-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.arrow {
+  transition: transform 0.25s var(--ease);
+  display: inline-block;
+}
+.btn-arrow:hover .arrow {
+  transform: translateX(5px);
+}
+
 /* ---------- Napit ---------- */
 .btn {
-  padding: 12px 28px;
-  font-size: 1rem;
+  padding: 13px 26px;
+  font-size: 0.95rem;
   border: none;
-  border-radius: 6px;
+  border-radius: 10px;
   cursor: pointer;
-  font-weight: 600;
-  transition: transform 0.1s ease, opacity 0.2s ease;
+  font-weight: 700;
+  transition: transform 0.18s var(--ease), box-shadow 0.18s var(--ease), opacity 0.18s var(--ease), background-color 0.18s var(--ease);
+  font-family: inherit;
 }
 .btn:hover {
   transform: translateY(-2px);
-  opacity: 0.9;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+.btn:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+.btn-block {
+  width: 100%;
+}
+.btn-sm {
+  padding: 8px 14px;
+  font-size: 0.82rem;
 }
 .btn-white {
-  background-color: #ffffff;
-  color: #111111;
+  background-color: var(--white);
+  color: var(--black);
 }
 .btn-black {
-  background-color: #111111;
-  color: #ffffff;
+  background-color: var(--black);
+  color: var(--white);
 }
 .btn-back {
-  background-color: #e0e0e0;
-  color: #111111;
+  background-color: var(--grey-100);
+  color: var(--black);
+}
+.btn-back:hover {
+  background-color: var(--grey-200);
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--black);
+  border: 1.5px solid var(--grey-200);
+}
+.btn-ghost:hover {
+  border-color: var(--black);
+}
+.btn-ghost-active {
+  background: var(--black);
+  color: var(--white);
+  border-color: var(--black);
 }
 .btn-add {
-  background-color: #2e7d32;
-  color: #ffffff;
+  background-color: var(--black);
+  color: var(--white);
   width: 100%;
-  margin-top: 12px;
+  margin-top: auto;
+  padding: 10px 16px;
+  font-size: 0.85rem;
+  border-radius: 10px;
+}
+.btn-add:hover {
+  background-color: var(--accent-green);
 }
 .btn-clear {
-  background-color: #c62828;
-  color: #ffffff;
+  background-color: var(--white);
+  color: var(--accent-red);
+  border: 1.5px solid var(--accent-red);
+}
+.btn-clear:hover {
+  background-color: var(--accent-red);
+  color: var(--white);
 }
 .btn-checkout {
-  background-color: #1565c0;
-  color: #ffffff;
+  background-color: var(--black);
+  color: var(--white);
+}
+.btn-checkout:hover {
+  background-color: var(--accent-blue);
 }
 .cart-buttons {
   display: flex;
   gap: 12px;
-  margin-top: 12px;
+  margin-top: 16px;
 }
- 
+.cart-buttons .btn {
+  flex: 1;
+}
+
 /* ---------- Kauppa ---------- */
 .shop-screen {
-  padding: 24px;
-  max-width: 1100px;
-  margin: 0 auto;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 .shop-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
+  gap: 14px;
+  padding: 18px 32px;
+  border-bottom: 1px solid var(--grey-200);
+  background: var(--white);
+  flex-shrink: 0;
+}
+.shop-title {
+  font-size: 1.25rem;
+  margin: 0;
+  flex: 1;
+  min-width: 200px;
+}
+.header-right {
+  display: flex;
+  align-items: center;
   gap: 12px;
-  margin-bottom: 24px;
+  flex-wrap: wrap;
 }
 .cart-summary {
-  font-weight: 600;
-  background-color: #f0f0f0;
-  padding: 8px 14px;
-  border-radius: 6px;
+  font-weight: 700;
+  background-color: var(--black);
+  color: var(--white);
+  padding: 10px 18px;
+  border-radius: 30px;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform 0.18s var(--ease), background-color 0.18s var(--ease);
 }
+.cart-summary:hover {
+  background-color: var(--accent-blue);
+  transform: translateY(-2px);
+}
+
+.shop-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  overflow: hidden;
+}
+.products-panel {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  padding: 24px 28px 32px;
+}
+.loading-text,
+.empty-state {
+  color: var(--grey-600);
+  padding: 40px 0;
+  text-align: center;
+}
+.products-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.products-count {
+  font-size: 0.85rem;
+  color: var(--grey-600);
+}
+.sort-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--grey-600);
+}
+.sort-control select {
+  padding: 7px 10px;
+  border: 1.5px solid var(--grey-200);
+  border-radius: 8px;
+  background: var(--white);
+  font-size: 0.85rem;
+  font-family: inherit;
+  color: var(--black);
+  cursor: pointer;
+  transition: border-color 0.2s var(--ease);
+}
+.sort-control select:hover,
+.sort-control select:focus {
+  outline: none;
+  border-color: var(--black);
+}
+
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 20px;
-  margin-bottom: 32px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px 16px;
 }
 .product-card {
-  border: 1px solid #e0e0e0;
-  border-radius: 10px;
-  padding: 16px;
-  text-align: center;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  overflow: visible;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: transform 0.2s var(--ease);
+}
+.product-card:hover {
+  transform: translateY(-3px);
+}
+.product-card.is-out {
+  opacity: 0.55;
 }
 .product-image {
   width: 100%;
-  height: 140px;
-  border-radius: 8px;
+  aspect-ratio: 1 / 1;
   overflow: hidden;
-  margin-bottom: 12px;
-  background-color: #f0f0f0;
+  background-color: var(--grey-100);
+  border-radius: 12px;
+  position: relative;
 }
 .product-photo {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* kuva rajautuu kauniisti eikä veny */
+  object-fit: cover; /* kaikki kuvat täyttävät saman kokoisen laatikon tasaisesti */
+  transition: transform 0.35s var(--ease);
 }
-.cart-box {
-  border-top: 2px solid #e0e0e0;
-  padding-top: 20px;
+.product-card:hover .product-photo {
+  transform: scale(1.04);
 }
- 
-/* ---------- Varastotilanne ---------- */
-.product-image {
+.product-info {
+  padding: 12px 2px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+}
+.product-name {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--grey-600);
+}
+.product-price {
+  margin: 0 0 4px;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--black);
+}
+.product-colors-hint {
+  margin: 0 0 8px;
+  font-size: 0.75rem;
+  color: var(--grey-600);
+}
+
+/* ---------- Ostoskori (avautuu vain koria painamalla) ---------- */
+.cart-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(13, 13, 13, 0.45);
+  display: flex;
+  justify-content: flex-end;
+  z-index: 100;
+  animation: fadeIn 0.2s var(--ease);
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.cart-drawer {
+  width: 380px;
+  max-width: 90vw;
+  height: 100%;
+  background: var(--white);
+  display: flex;
+  flex-direction: column;
+  padding: 20px 22px 18px;
+  box-shadow: -12px 0 32px rgba(0, 0, 0, 0.18);
+  animation: slideIn 0.25s var(--ease);
+}
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+.cart-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  margin-bottom: 16px;
+}
+.cart-drawer-header h3 {
+  margin: 0;
+}
+.cart-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: var(--grey-100);
+  color: var(--black);
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.18s var(--ease);
+}
+.cart-close:hover {
+  background: var(--grey-200);
+}
+.cart-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+.cart-footer {
+  flex-shrink: 0;
+  border-top: 1px solid var(--grey-200);
+  padding-top: 14px;
+  margin-top: 12px;
+}
+.cart-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.cart-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 4px;
+  border-bottom: 1px dashed var(--grey-200);
+  font-size: 0.92rem;
+}
+.cart-item-price {
+  font-weight: 700;
+}
+.cart-empty {
+  color: var(--grey-600);
+}
+.cart-total {
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* ---------- Tuotteen pikakatselu ---------- */
+.detail-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(13, 13, 13, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 100;
+  animation: fadeIn 0.2s var(--ease);
+}
+.detail-modal {
   position: relative;
+  background: var(--white);
+  border-radius: 20px;
+  width: 760px;
+  max-width: 100%;
+  max-height: 88vh;
+  overflow-y: auto;
+  display: flex;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  animation: fadeIn 0.25s var(--ease);
 }
+.detail-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 1;
+  background: var(--white);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+.detail-image {
+  flex: 1;
+  min-width: 0;
+  aspect-ratio: 1 / 1;
+  background: var(--grey-100);
+}
+.detail-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.detail-info {
+  flex: 1;
+  min-width: 0;
+  padding: 28px 28px 24px;
+  display: flex;
+  flex-direction: column;
+}
+.detail-name {
+  margin: 0 0 6px;
+  font-size: 1.3rem;
+}
+.detail-price {
+  margin: 0 0 16px;
+  font-weight: 800;
+  font-size: 1.3rem;
+}
+.detail-description {
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--grey-600);
+  margin: 0 0 20px;
+  white-space: pre-line;
+}
+.detail-description-empty {
+  font-style: italic;
+  opacity: 0.7;
+}
+.detail-colors {
+  margin-bottom: 20px;
+}
+.detail-colors-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--grey-600);
+  margin-bottom: 10px;
+}
+.color-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.color-swatch {
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 2px solid var(--grey-200);
+  padding: 0;
+  cursor: pointer;
+  background: var(--grey-100);
+  transition: border-color 0.18s var(--ease), transform 0.18s var(--ease);
+}
+.color-swatch:hover {
+  transform: translateY(-2px);
+}
+.color-swatch-active {
+  border-color: var(--black);
+}
+.color-swatch img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.detail-info .btn-add {
+  margin-top: auto;
+}
+
+@media (max-width: 640px) {
+  .detail-modal {
+    flex-direction: column;
+    max-height: 92vh;
+  }
+  .detail-image {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+/* ---------- Varastotilanne ---------- */
 .stock-badge {
   position: absolute;
-  top: 8px;
-  right: 8px;
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-size: 0.75rem;
+  top: 10px;
+  left: 10px;
+  padding: 5px 11px;
+  border-radius: 20px;
+  font-size: 0.7rem;
   font-weight: 700;
   color: #fff;
+  letter-spacing: 0.02em;
 }
 .stock-out {
-  background-color: #c62828;
+  background-color: var(--accent-red);
+}
+.stock-low-badge {
+  background-color: #e6720f;
 }
 .stock-info {
-  font-size: 0.85rem;
-  color: #555;
-  margin: 4px 0 0;
+  font-size: 0.78rem;
+  color: var(--grey-600);
+  margin: 0;
 }
 .stock-low {
-  color: #e65100;
+  color: #c05500;
   font-weight: 600;
 }
 .stock-zero {
-  color: #c62828;
+  color: var(--accent-red);
   font-weight: 600;
 }
 .btn-add:disabled {
-  background-color: #bdbdbd;
+  background-color: var(--grey-200);
+  color: var(--grey-600);
   cursor: not-allowed;
   transform: none;
+  box-shadow: none;
 }
 .btn-add-product {
-  background-color: #1565c0;
+  background-color: var(--accent-blue);
   color: #fff;
-  margin-bottom: 20px;
+  margin-bottom: 22px;
 }
- 
+.btn-add-product:hover {
+  background-color: #0f4489;
+}
+
+/* ---------- Suosikki-nappi ---------- */
+.wishlist-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(4px);
+  color: var(--black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s var(--ease), color 0.2s var(--ease), background-color 0.2s var(--ease);
+}
+.wishlist-btn:hover {
+  transform: scale(1.14);
+  background: var(--white);
+}
+.wishlist-btn-active {
+  color: var(--accent-red);
+}
+.wishlist-btn-active:hover {
+  transform: scale(1.14) rotate(-6deg);
+}
+
 /* ---------- Uuden tuotteen lisäys ---------- */
 .add-product-screen {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f5f5f5;
+  background-color: var(--off-white);
+  padding: 24px;
 }
 .add-product-box {
-  background: #fff;
-  padding: 32px;
-  border-radius: 10px;
-  width: 360px;
+  background: var(--white);
+  padding: 36px 32px;
+  border-radius: 20px;
+  width: 440px;
+  max-width: 92vw;
+  max-height: 90vh;
+  overflow-y: auto;
   text-align: center;
+  box-shadow: var(--shadow-md);
 }
 .add-product-box input,
-.add-product-box select {
+.add-product-box select,
+.add-product-box textarea {
   width: 100%;
-  padding: 10px;
-  margin-bottom: 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 1rem;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  border: 1.5px solid var(--grey-200);
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: var(--black);
+  background: var(--off-white);
+  transition: border-color 0.2s var(--ease);
+  resize: vertical;
+}
+.add-product-box input:focus,
+.add-product-box select:focus,
+.add-product-box textarea:focus {
+  outline: none;
+  border-color: var(--black);
+  background: var(--white);
+}
+.color-editor {
+  text-align: left;
+  margin-bottom: 14px;
+}
+.color-editor-label {
+  margin: 0 0 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--grey-600);
+}
+.color-editor-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+  align-items: center;
+}
+.color-editor-row input {
+  margin-bottom: 0;
+}
+.color-remove {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  background: var(--grey-100);
+  color: var(--accent-red);
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background-color 0.18s var(--ease);
+}
+.color-remove:hover {
+  background: #fdecee;
 }
 .add-product-buttons {
   display: flex;
@@ -693,40 +902,121 @@ body {
   justify-content: center;
   margin-top: 8px;
 }
- 
+.add-product-buttons .btn {
+  flex: 1;
+}
+
 /* ---------- Maksu ---------- */
 .payment-screen {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f5f5f5;
+  background-color: var(--off-white);
+  padding: 24px;
 }
 .payment-box {
-  background: #fff;
-  padding: 32px;
-  border-radius: 10px;
+  background: var(--white);
+  padding: 36px 32px;
+  border-radius: 20px;
   width: 380px;
   text-align: center;
+  box-shadow: var(--shadow-md);
+}
+.payment-box .btn {
+  margin-top: 10px;
+}
+.status-pill {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  background: var(--grey-100);
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: capitalize;
+}
+.status-paid {
+  background: #e3f5e9;
+  color: var(--accent-green);
 }
 .payment-note {
   font-size: 0.85rem;
-  color: #555;
+  color: var(--grey-600);
   background: #fff8e1;
-  padding: 10px;
-  border-radius: 6px;
-  margin: 16px 0;
+  padding: 12px;
+  border-radius: 10px;
+  margin: 18px 0;
+  text-align: left;
 }
 .payment-success {
-  color: #2e7d32;
+  color: var(--accent-green);
   font-weight: 700;
-  margin: 16px 0;
+  margin: 18px 0;
 }
- 
+
+@media (max-width: 1300px) {
+  .products-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .shop-screen {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+  }
+  .shop-body {
+    flex-direction: column;
+    overflow: visible;
+  }
+  .products-panel {
+    overflow: visible;
+  }
+  .products-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .cart-drawer {
+    width: 100%;
+    max-width: 100vw;
+  }
+}
+
+@media (max-width: 600px) {
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 380px) {
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 700px) {
+  .choice-screen {
+    height: auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow: visible;
+  }
   .choice-halves {
     flex-direction: column;
   }
+  .choice-half {
+    flex: none;
+    min-height: 260px;
+    padding: 32px 24px;
+  }
+  .choice-half:hover {
+    flex-grow: 0;
+  }
+  .shop-header {
+    padding: 14px 18px;
+  }
+  .products-panel {
+    padding: 18px 16px 24px;
+  }
 }
 </style>
- 

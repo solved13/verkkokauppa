@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
 
 // POST /api/products — vain admin voi lisätä uuden tuotteen
 router.post('/', requireAdmin, async (req, res) => {
-  const { name, price, category, image, stock } = req.body
+  const { name, price, category, image, stock, description, colors } = req.body
 
   if (!name || !price || !category) {
     return res.status(400).json({ error: 'Täytä nimi, hinta ja kategoria' })
@@ -36,6 +36,8 @@ router.post('/', requireAdmin, async (req, res) => {
       category,
       image: image || '',
       stock: stock !== undefined ? Number(stock) : 0,
+      description: description || '',
+      colors: Array.isArray(colors) ? colors : [],
     })
 
     res.json(newProduct)
