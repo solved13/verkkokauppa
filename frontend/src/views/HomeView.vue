@@ -27,9 +27,6 @@
         <p class="choice-desc">
           Klassisia malleja historialla. Todistettua laatua edulliseen hintaan.
         </p>
-        <button class="btn btn-white btn-arrow" @click.stop="openShop('old')">
-          Mene kauppaan <span class="arrow">→</span>
-        </button>
       </div>
 
       <div class="choice-half choice-white" @click="openShop('new')">
@@ -38,9 +35,6 @@
         <p class="choice-desc">
           Kauden uusimmat julkaisut. Modernia muotoilua ja teknologiaa.
         </p>
-        <button class="btn btn-black btn-arrow" @click.stop="openShop('new')">
-          Mene kauppaan <span class="arrow">→</span>
-        </button>
       </div>
     </div>
   </div>

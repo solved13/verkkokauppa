@@ -1,10 +1,6 @@
 import { BACKEND_URL } from './env.js'
 
-// Shared helper functions for the API and UI tests around the
-// catalog/cart/orders. The goal is for every test to set up its own data
-// (a unique product, a unique user) and never depend on what other tests
-// have already done, since tests run in parallel against the same
-// temporary database.
+
 
 let counter = 0
 function unique(tag) {
@@ -80,12 +76,7 @@ export async function createProduct(request, adminToken, overrides = {}) {
   return res.json()
 }
 
-// Logs a user in through the real UI form (not localStorage) and waits
-// until the home screen appears. We specifically wait for the "Kirjaudu
-// ulos" button — it only shows up after a successful login and can be
-// identified unambiguously by its role, unlike the "Hei, ..." text, which
-// sits in the same block as the badge/button and could confuse a
-// text/regex search.
+
 export async function loginViaUI(page, email, password) {
   await page.goto('/')
   await page.getByPlaceholder('Sähköposti').fill(email)
@@ -94,11 +85,7 @@ export async function loginViaUI(page, email, password) {
   await page.getByRole('button', { name: 'Kirjaudu ulos' }).waitFor({ state: 'visible' })
 }
 
-// Clicks the right "half" (VANHOJA TENNAREITA / UUDET TENNARIT) on the home
-// screen to enter the catalog for that category. Clicks the card itself
-// rather than a specific "Mene kauppaan" button inside it — the whole
-// choice-half has its own @click="openShop(...)" handler, so this works
-// the same way regardless of whether that button is present/visible.
+
 export async function openCategory(page, category) {
   const title = category === 'old' ? 'VANHOJA TENNAREITA' : 'UUDET TENNARIT'
   await page.locator('.choice-half', { hasText: title }).click()

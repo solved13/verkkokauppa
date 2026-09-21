@@ -311,19 +311,6 @@ body {
   opacity: 0.85;
   z-index: 1;
 }
-.btn-arrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-.arrow {
-  transition: transform 0.25s var(--ease);
-  display: inline-block;
-}
-.btn-arrow:hover .arrow {
-  transform: translateX(5px);
-}
-
 /* ---------- Napit ---------- */
 .btn {
   padding: 13px 26px;
