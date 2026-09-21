@@ -60,10 +60,11 @@
 import { ref } from 'vue'
 
 // Askeleet käynnistyvät vain, kun käyttäjä itse painaa logoa — ei
-// automaattisesti sivun latautuessa eikä jokaisella kerralla, kun logo
-// toimii "koti"-linkkinä muualla sovelluksessa (ShopView/WishlistView
-// käyttävät edelleen tavallista .brand-mark-link -painiketta ilman tätä
-// komponenttia), koska animaatio joka klikkauksella olisi liikaa.
+// automaattisesti sivun latautuessa. AuthView/HomeView käyttävät tätä
+// komponenttia ilman navigointia (logo ei vie minnekään niissä näkymissä).
+// ShopView/WishlistView taas sitovat @click-kuuntelijan omaan goHome()-
+// funktioonsa, joka viivästää siirtymän etusivulle n. 800ms:lla, jotta
+// askelanimaatio ehtii näkyä ennen näkymän vaihtumista.
 //
 // Tarina: paljaat jalanjäljet kävelevät logoa kohti vasemmalta (3 askelta),
 // ja heti perään kengänpohjan jäljet jatkavat matkaa logosta oikealle

@@ -67,6 +67,8 @@ export async function createProduct(request, adminToken, overrides = {}) {
     image: overrides.image || 'https://images.unsplash.com/photo-1600269452121-4f2416e55c28?w=400',
     stock: overrides.stock ?? 5,
   }
+  if (overrides.description !== undefined) data.description = overrides.description
+  if (overrides.colors !== undefined) data.colors = overrides.colors
 
   const res = await request.post(`${BACKEND_URL}/api/products`, {
     headers: { Authorization: `Bearer ${adminToken}` },
@@ -92,6 +94,11 @@ export async function loginViaUI(page, email, password) {
   await page.getByRole('button', { name: 'Kirjaudu ulos' }).waitFor({ state: 'visible' })
 }
 
+// Clicks the right "half" (VANHOJA TENNAREITA / UUDET TENNARIT) on the home
+// screen to enter the catalog for that category. Clicks the card itself
+// rather than a specific "Mene kauppaan" button inside it — the whole
+// choice-half has its own @click="openShop(...)" handler, so this works
+// the same way regardless of whether that button is present/visible.
 export async function openCategory(page, category) {
   const title = category === 'old' ? 'VANHOJA TENNAREITA' : 'UUDET TENNARIT'
   await page.locator('.choice-half', { hasText: title }).click()

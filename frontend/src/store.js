@@ -102,6 +102,151 @@ export async function fetchProductById(id) {
 }
 
 // ------------------------------
+// HAKU (koko sivuston kattava, kirjoitusvirheitä sietävä)
+// ------------------------------
+// Haetaan sekä nimestä, kuvauksesta että kategoriasta, ja ollaan toleransseja
+// pienille kirjoitusvirheille (Levenshtein-etäisyys), koska käyttäjä
+// harvoin kirjoittaa tuotteen nimen täysin oikein muistista.
+
+function normalizeSearchText(str) {
+  return (str || '').toLowerCase().trim()
+}
+
+// Damerau-Levenshtein-etäisyys kahden sanan välillä: lisäys/poisto/korvaus
+// PLUS vierekkäisten kirjainten vaihto yhden askeleen hinnalla — jälkimmäinen
+// on tavallisin näppäilyvirhe (esim. "naik" -> "nike"), joten se kannattaa
+// hyväksyä yhtä halvalla kuin yksittäisen kirjaimen korvaus.
+function levenshtein(a, b) {
+  const m = a.length
+  const n = b.length
+  if (m === 0) return n
+  if (n === 0) return m
+
+  // d[i][j] koko matriisina (ei rivi-optimointia), koska transponointi
+  // tarvitsee näkyvyyden kaksi riviä taaksepäin (i-2).
+  const d = Array.from({ length: m + 1 }, () => new Array(n + 1).fill(0))
+  for (let i = 0; i <= m; i++) d[i][0] = i
+  for (let j = 0; j <= n; j++) d[0][j] = j
+
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1
+      d[i][j] = Math.min(
+        d[i - 1][j] + 1, // poisto
+        d[i][j - 1] + 1, // lisäys
+        d[i - 1][j - 1] + cost // korvaus tai osuma
+      )
+      if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) {
+        d[i][j] = Math.min(d[i][j], d[i - 2][j - 2] + 1) // vierekkäisten kirjainten vaihto
+      }
+    }
+  }
+  return d[m][n]
+}
+
+// Sallittu etäisyys riippuu sanan pituudesta — lyhyille sanoille ei sallita
+// juuri mitään (muuten lähes kaikki osuisi), pitkille vähän enemmän.
+function maxAllowedTypoDistance(len) {
+  if (len <= 3) return 0
+  if (len <= 5) return 1
+  return 2
+}
+
+// Pisteyttää yhden hakusanan osumaa yhteen kohdesanaan. 0 = ei osumaa.
+function wordMatchScore(token, word) {
+  if (!word) return 0
+  if (word === token) return 3
+  if (word.startsWith(token)) return 2.5
+  if (word.includes(token)) return 2
+  const distance = levenshtein(token, word)
+  if (distance <= maxAllowedTypoDistance(token.length)) return 1.5 - distance * 0.3
+  return 0
+}
+
+function categorySearchText(category) {
+  return category === 'old' ? 'vanhat käytetyt tennarit retro' : 'uudet tennarit uutuus'
+}
+
+// Pisteyttää yhden tuotteen suhteessa koko hakulauseeseen (jo tokeneihin
+// pilkottuna). JOKAISEN hakusanan pitää löytää edes jokin osuma jostain
+// kentästä (typo-toleranssilla) — muuten tuote hylätään kokonaan, ettei
+// esim. kaksisanainen haku näytä tuotteita jotka osuvat vain toiseen sanaan.
+function scoreProductForSearch(product, tokens) {
+  const fields = [
+    { text: product.name, weight: 3 },
+    { text: categorySearchText(product.category), weight: 1.5 },
+    { text: product.description, weight: 1 },
+  ]
+
+  let total = 0
+  for (const token of tokens) {
+    let best = 0
+    for (const field of fields) {
+      const words = normalizeSearchText(field.text).split(/\s+/)
+      for (const word of words) {
+        const score = wordMatchScore(token, word) * field.weight
+        if (score > best) best = score
+      }
+    }
+    if (best === 0) return 0
+    total += best
+  }
+  return total
+}
+
+export const searchQuery = ref('')
+export const searchResults = ref([])
+export const searchLoading = ref(false)
+
+// Kaikkien tuotteiden (molemmat kategoriat) kevyt välimuisti hakua varten —
+// nollataan aina kun tuotteita lisätään/muokataan/poistetaan, jotta haku ei
+// koskaan näytä vanhentunutta tietoa.
+let searchProductsCache = null
+
+export function invalidateSearchCache() {
+  searchProductsCache = null
+}
+
+async function getAllProductsForSearch() {
+  if (searchProductsCache) return searchProductsCache
+  const response = await fetch(`${API_URL}/products`)
+  searchProductsCache = await response.json()
+  return searchProductsCache
+}
+
+// Kutsutaan hakukentän input-tapahtumasta (komponentti hoitaa debounce-
+// viiveen). Tyhjä haku tyhjentää tulokset ilman verkkopyyntöä.
+export async function runSiteSearch(query) {
+  searchQuery.value = query
+  const trimmed = normalizeSearchText(query)
+
+  if (!trimmed) {
+    searchResults.value = []
+    return
+  }
+
+  searchLoading.value = true
+  try {
+    const all = await getAllProductsForSearch()
+    const tokens = trimmed.split(/\s+/).filter(Boolean)
+
+    searchResults.value = all
+      .map((product) => ({ product, score: scoreProductForSearch(product, tokens) }))
+      .filter((entry) => entry.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 8)
+      .map((entry) => entry.product)
+  } finally {
+    searchLoading.value = false
+  }
+}
+
+export function clearSiteSearch() {
+  searchQuery.value = ''
+  searchResults.value = []
+}
+
+// ------------------------------
 // SUOSIKIT (tallennetaan selaimen muistiin, säilyy sivun päivityksen yli)
 // ------------------------------
 export const wishlist = ref(JSON.parse(localStorage.getItem('wishlist') || '[]'))
@@ -271,6 +416,7 @@ export async function submitProduct(payload) {
     }
 
     await loadProducts(data.category) // päivitetään lista, jotta uusi tuote näkyy heti
+    invalidateSearchCache() // haku ei saa enää näyttää vanhentunutta listaa
     return { ok: true, product: data }
   } catch (err) {
     return { ok: false, error: 'Yhteys palvelimeen epäonnistui' }
@@ -294,6 +440,7 @@ export async function updateProduct(id, payload) {
     }
 
     await loadProducts(data.category) // päivitetään lista, jotta muutokset näkyvät heti
+    invalidateSearchCache()
     return { ok: true, product: data }
   } catch (err) {
     return { ok: false, error: 'Yhteys palvelimeen epäonnistui' }
@@ -313,6 +460,7 @@ export async function deleteProduct(id, category) {
     }
 
     await loadProducts(category) // päivitetään lista, jotta poistettu tuote katoaa heti
+    invalidateSearchCache()
     return { ok: true }
   } catch (err) {
     return { ok: false, error: 'Yhteys palvelimeen epäonnistui' }

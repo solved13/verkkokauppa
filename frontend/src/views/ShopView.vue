@@ -1,6 +1,6 @@
 <template>
   <div :class="['shop-screen', category === 'old' ? 'shop-old' : 'shop-new']">
-    <!-- Банер помилки кошика (наприклад, "залишилось лише N шт.") замість alert() -->
+  
     <transition name="fade">
       <p v-if="cartError" class="cart-toast">{{ cartError }}</p>
     </transition>
@@ -10,6 +10,7 @@
       <h2 class="shop-title">
         {{ category === 'old' ? 'Käytettyjen tennareiden kauppa' : 'Uusien tennareiden kauppa' }}
       </h2>
+      <SearchBar />
       <div class="header-right">
         <ThemeToggle />
         <button
@@ -114,7 +115,7 @@
                   }"
                 >
                   <span v-if="product.stock === 0">Ei varastossa</span>
-                  <span v-else-if="product.stock <= 3">⚠️ Jäljellä {{ product.stock }} kpl</span>
+                  <span v-else-if="product.stock <= 3"> Jäljellä {{ product.stock }} kpl</span>
                   <span v-else>Varastossa {{ product.stock }} kpl</span>
                 </p>
 
@@ -263,6 +264,7 @@ import { ref, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import ThemeToggle from '../components/ThemeToggle.vue'
 import AnimatedBrandMark from '../components/AnimatedBrandMark.vue'
+import SearchBar from '../components/SearchBar.vue'
 import {
   user,
   products,
@@ -354,11 +356,19 @@ async function handleCheckout() {
 // näytön oma tila ja ladataan uuden kategorian tuotteet palvelimelta.
 watch(
   category,
-  (newCategory) => {
+  async (newCategory) => {
     showWishlistOnly.value = false
     showCart.value = false
     selectedProduct.value = null
-    loadProducts(newCategory)
+    await loadProducts(newCategory)
+
+    // Hakupalkin tulokseen klikkaaminen tuo tänne ?product=<id> mukana —
+    // avataan sen tuotteen pikakatselu heti, kun lista on latautunut.
+    const targetId = route.query.product
+    if (targetId) {
+      const match = products.value.find((product) => product._id === targetId)
+      if (match) openProductDetail(match)
+    }
   },
   { immediate: true }
 )
@@ -371,7 +381,10 @@ function editProduct(product) {
   router.push({ path: `/admin/products/${product._id}/edit`, query: { category: product.category } })
 }
 
-
+// Logon klikkaus käynnistää askelanimaation (AnimatedBrandMark.vue) samaan
+// aikaan — jos siirtyisimme etusivulle heti, Vue vaihtaisi näkymän ennen
+// kuin selain ehtii edes piirtää ensimmäisen askeleen. Pieni viive antaa
+// animaation ehtiä näkyä ennen sivunvaihtoa.
 function goHome() {
   setTimeout(() => {
     router.push('/')

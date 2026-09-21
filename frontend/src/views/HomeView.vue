@@ -4,6 +4,7 @@
       <div class="user-bar-left">
         <AnimatedBrandMark small />
       </div>
+      <SearchBar />
       <div class="user-bar-right">
         <ThemeToggle />
         <span class="hello-text">Hei, {{ user?.name }}!</span>
@@ -26,6 +27,9 @@
         <p class="choice-desc">
           Klassisia malleja historialla. Todistettua laatua edulliseen hintaan.
         </p>
+        <button class="btn btn-white btn-arrow" @click.stop="openShop('old')">
+          Mene kauppaan <span class="arrow">→</span>
+        </button>
       </div>
 
       <div class="choice-half choice-white" @click="openShop('new')">
@@ -34,6 +38,9 @@
         <p class="choice-desc">
           Kauden uusimmat julkaisut. Modernia muotoilua ja teknologiaa.
         </p>
+        <button class="btn btn-black btn-arrow" @click.stop="openShop('new')">
+          Mene kauppaan <span class="arrow">→</span>
+        </button>
       </div>
     </div>
   </div>
@@ -44,6 +51,7 @@ import { useRouter } from 'vue-router'
 import { user, wishlist, logout } from '../store.js'
 import ThemeToggle from '../components/ThemeToggle.vue'
 import AnimatedBrandMark from '../components/AnimatedBrandMark.vue'
+import SearchBar from '../components/SearchBar.vue'
 
 const router = useRouter()
 

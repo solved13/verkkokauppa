@@ -21,7 +21,7 @@
         Simuloi maksu
       </button>
 
-      <p v-else class="payment-success"> Tilaus on maksettu!</p>
+      <p v-else class="payment-success">✅ Tilaus on maksettu!</p>
 
       <button class="btn btn-back btn-block" @click="router.push('/')">Etusivulle</button>
     </div>

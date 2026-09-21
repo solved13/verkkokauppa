@@ -73,7 +73,10 @@ test.describe('Catalog and cart (UI)', () => {
     await expect(page.getByText('Maksettava summa: 25 €')).toBeVisible()
 
     await page.getByRole('button', { name: 'Simuloi maksu' }).click()
-    await expect(page.getByText(' Tilaus on maksettu!')).toBeVisible({ timeout: 15000 })
+    // The default 5s expect timeout can be too tight for the payment
+    // request to round-trip while many workers share the same backend/DB
+    // in a full parallel run — give it more room here.
+    await expect(page.getByText('✅ Tilaus on maksettu!')).toBeVisible({ timeout: 15000 })
   })
 
   test('admin sees the add product button', async ({ page, request }) => {
@@ -138,28 +141,11 @@ test.describe('Catalog and cart (UI)', () => {
     await expect(page.locator('.product-card', { hasText: other.name })).toHaveCount(0)
   })
 
-  test('the home screen favorites link opens the catalog pre-filtered to favorites', async ({ page, request }) => {
-    const admin = await registerAdmin(request, 'shop-wishlist-home')
-    const liked = await createProduct(request, admin.token, { category: 'new', price: 45 })
-    const buyer = await registerUser(request, 'shop-wishlist-home-buyer')
-
-    await loginViaUI(page, buyer.email, buyer.password)
-    await openCategory(page, 'new')
-    await page
-      .locator('.product-card', { hasText: liked.name })
-      .locator('.wishlist-btn:not(.edit-product-btn)')
-      .click()
-
-    // Back to the home screen — the "♥ N" link there only shows up once
-    // something has been favorited.
-    await page.goto('/')
-    const homeWishlistLink = page.getByRole('button', { name: '♥ 1' })
-    await expect(homeWishlistLink).toBeVisible()
-    await homeWishlistLink.click()
-
-    await expect(page).toHaveURL(/\/shop\/new\?wishlist=1/)
-    await expect(page.locator('.product-card', { hasText: liked.name })).toBeVisible()
-  })
+  // Note: the "♥ N" link on the home screen now opens the dedicated
+  // /wishlist page (not a /shop/<category>?wishlist=1 pre-filter — that
+  // design was replaced once /wishlist shipped). That flow is covered by
+  // 'user can open the dedicated favorites page from the home screen' in
+  // newer-features.spec.js, so it isn't duplicated here.
 
   test('admin can edit an existing product and see the change reflected in the catalog', async ({
     page,

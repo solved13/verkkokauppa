@@ -1,6 +1,6 @@
 <template>
   <div class="shop-screen">
-    <!-- Банер помилки кошика, як і на сторінці магазину -->
+   
     <transition name="fade">
       <p v-if="cartError" class="cart-toast">{{ cartError }}</p>
     </transition>
@@ -8,6 +8,7 @@
     <header class="shop-header">
       <AnimatedBrandMark small @click="goHome" />
       <h2 class="shop-title">Suosikit</h2>
+      <SearchBar />
       <div class="header-right">
         <ThemeToggle />
         <button class="cart-summary" @click="showCart = true">
@@ -225,6 +226,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import ThemeToggle from '../components/ThemeToggle.vue'
 import AnimatedBrandMark from '../components/AnimatedBrandMark.vue'
+import SearchBar from '../components/SearchBar.vue'
 import {
   wishlistProducts,
   loadingWishlistProducts,
@@ -295,7 +297,8 @@ async function handleCheckout() {
   router.push('/payment')
 }
 
-
+// Sama viivästetty siirtymä kuin ShopView.vue:ssa — antaa askelanimaation
+// ehtiä näkyä ennen kuin näkymä vaihtuu etusivulle.
 function goHome() {
   setTimeout(() => {
     router.push('/')

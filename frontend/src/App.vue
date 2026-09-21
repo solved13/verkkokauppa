@@ -23,13 +23,6 @@
   --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.12);
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
 
-  /* ---------- Teema (vaalea/tumma): semanttiset "roolitokenit" ---------- */
-  /* Nämä (eivät --black/--white/--grey-* suoraan) määräävät sivun taustan,
-     korttien pinnan ja tekstin värin — niin yksi attribuutti (data-theme)
-     riittää vaihtamaan koko sovelluksen ulkoasun. --black/--white pysyvät
-     ennallaan ja niitä käytetään edelleen sellaisenaan siellä, missä väri
-     on tarkoituksella aina musta/valkoinen riippumatta teemasta
-     (esim. .choice-black/.choice-white, .btn-black/.btn-checkout).*/
   --bg: var(--off-white);
   --surface: var(--white);
   --surface-2: var(--grey-100);
@@ -39,10 +32,10 @@
   --error-bg: #fdecee;
   --success-bg: #e3f5e9;
   --note-bg: #fff8e1;
+  --header-bg: #f2f2f0;
 }
 
-/* Tumma teema aktivoituu, kun <html>-elementillä on data-theme="dark"
-   (asetetaan JS:llä store.js:n toggleTheme()-funktiosta, ks. ThemeToggle.vue) */
+
 :root[data-theme='dark'] {
   color-scheme: dark;
   --bg: #17171b;
@@ -54,6 +47,7 @@
   --error-bg: rgba(225, 29, 60, 0.16);
   --success-bg: rgba(31, 138, 76, 0.2);
   --note-bg: rgba(255, 193, 7, 0.14);
+  --header-bg: #0d0d0d;
 }
 
 * {
@@ -71,7 +65,7 @@ body {
 }
 
 /* ---------- Brand ---------- */
-/* Sedun logon tyylin mukainen wordmark: pyöreä, lihava, pienillä kirjaimilla */
+
 .brand-mark {
   display: inline-block;
   font-family: 'Fredoka', 'Segoe UI', system-ui, sans-serif;
@@ -139,15 +133,6 @@ body {
   text-align: center;
   box-shadow: var(--shadow-md);
 }
-.auth-box-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 22px;
-}
-.auth-box-top .brand-mark {
-  margin-bottom: 0;
-}
 .auth-box h2 {
   margin: 0 0 20px;
   font-size: 1.5rem;
@@ -211,19 +196,27 @@ body {
   justify-content: space-between;
   align-items: center;
   gap: 12px;
-  padding: 11px 28px;
-  background: var(--white);
+  padding: 14px 28px;
+  background: var(--header-bg);
   flex-wrap: wrap;
   flex-shrink: 0;
 }
-:root[data-theme='dark'] .user-bar {
-  background: var(--black);
+.user-bar-left {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
 }
 .user-bar-right {
   display: flex;
   align-items: center;
   gap: 12px;
   flex-wrap: wrap;
+}
+/* Samat mitat kuin shop-headerin oikean puolen napeilla (cart-summary,
+   btn-ghost-sm), jotta molemmat headerit ovat täsmälleen samankorkuiset. */
+.user-bar-right .btn-back {
+  padding: 10px 20px;
 }
 .hello-text {
   font-weight: 600;
@@ -301,9 +294,7 @@ body {
   margin: 0 0 clamp(8px, 2vh, 16px);
   letter-spacing: -0.01em;
   z-index: 1;
-  /* Väri annetaan aina suoraan (ei vain perittynä), koska osa selaimista
-     himmentää suuren/lihavoidun otsikkotekstin harmaaksi automaattisen
-     tummuustilan heuristiikalla, vaikka taustan väri olisi jo tumma. */
+ 
   color: inherit;
 }
 .choice-black .choice-title {
@@ -396,9 +387,7 @@ body {
   font-size: 0.85rem;
   border-radius: 10px;
 }
-/* Tummassa teemassa musta nappi sulautuu lähes mustaan taustaan, joten
-   sille lisätään valkoinen obводка (reunaviiva) erottumaan taustasta.
-   Ei koske :disabled-tilaa, jolla on jo oma harmaa ulkoasunsa. */
+
 :root[data-theme='dark'] .btn-add:not(:disabled) {
   border: 1.5px solid var(--white);
 }
@@ -444,14 +433,13 @@ body {
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 14px;
-  padding: 11px 28px;
-  border-bottom: 1px solid var(--border);
-  background: var(--surface);
+  padding: 14px 28px;
+  background: var(--header-bg);
   flex-shrink: 0;
 }
 .shop-title {
+  margin: 0;
   font-size: 1.25rem;
-  margin-left: 80px;
   flex: 1;
   min-width: 200px;
 }
@@ -479,9 +467,7 @@ body {
   transform: translateY(-2px);
 }
 
-/* Банер помилки кошика — той самий "стиль повідомлень", що й .auth-error,
-   але позиціонований як плаваючий toast зверху екрана, бо кошик може бути
-   закритий у момент, коли користувач тисне "Lisää ostoskoriin". */
+
 .cart-toast {
   position: fixed;
   top: 18px;
@@ -1207,6 +1193,13 @@ body {
 }
 .brand-mark-animated.small {
   margin-left: 20px;
+  /* Sama tila, joka ennen oli vain .shop-title:n margin-left:llä — siirretty
+     logolle itselleen, jotta jalanjälkiliuska (.footstep-trail-right, ulottuu
+     n. 73px logon oikealle puolelle) ei mene seuraavan elementin päälle
+     millään headerillä, myös etusivulla, jossa ei ole otsikkoa lainkaan.
+     (Tämä ei tasaa hakukentän vaakasijaintia headerien välillä — se riippuu
+     oikean reunan sisällön leveydestä, joka on eri joka näytöllä.) */
+  margin-right: 80px;
 }
 .brand-mark-text {
   position: relative;
@@ -1277,5 +1270,124 @@ body {
 .brand-mark-animated.small .footstep {
   width: 20px;
   height: 20px;
+}
+
+/* ---------- Sivustohaku ---------- */
+.site-search {
+  position: relative;
+  width: 100%;
+  max-width: 280px;
+}
+.site-search-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  height: 38px;
+  border-radius: 20px;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  transition: border-color 0.18s var(--ease);
+}
+.site-search.open .site-search-field {
+  border-color: var(--text);
+}
+.site-search-icon {
+  font-size: 0.9rem;
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+.site-search-input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: none;
+  outline: none;
+  font: inherit;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+.site-search-input::placeholder {
+  color: var(--text-muted);
+}
+.site-search-clear {
+  border: none;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.85rem;
+  line-height: 1;
+  padding: 2px;
+  flex-shrink: 0;
+}
+.site-search-clear:hover {
+  color: var(--text);
+}
+.site-search-results {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  min-width: 280px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  z-index: 40;
+}
+.site-search-status {
+  margin: 0;
+  padding: 14px 16px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+.site-search-list {
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  max-height: 340px;
+  overflow-y: auto;
+}
+.site-search-result {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.site-search-result.active,
+.site-search-result:hover {
+  background: var(--surface-2);
+}
+.site-search-thumb {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--surface-2);
+}
+.site-search-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.site-search-name {
+  font-weight: 600;
+  font-size: 0.88rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.site-search-meta {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+@media (max-width: 640px) {
+  .site-search {
+    max-width: none;
+  }
 }
 </style>

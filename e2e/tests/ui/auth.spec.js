@@ -67,4 +67,10 @@ test.describe('Authentication (UI)', () => {
     await page.getByRole('link', { name: 'Kirjaudu sisään' }).click()
     await expect(page.getByRole('heading', { name: 'Kirjaudu sisään' })).toBeVisible()
   })
+
+  test('the login screen has no logo or theme toggle', async ({ page }) => {
+    await page.goto('/login')
+    await expect(page.locator('.brand-mark')).toHaveCount(0)
+    await expect(page.locator('.theme-toggle')).toHaveCount(0)
+  })
 })
