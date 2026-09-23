@@ -1,0 +1,2202 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\Project\\VUE\\verkkokauppa\\e2e\\node_modules\\@playwright\\test\\cli.js",
+      "test"
+    ],
+    "configFile": "D:\\Project\\VUE\\verkkokauppa\\e2e\\playwright.config.js",
+    "rootDir": "D:/Project/VUE/verkkokauppa/e2e/tests",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 8
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/Project/VUE/verkkokauppa/e2e/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 8
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "D:/Project/VUE/verkkokauppa/e2e/tests",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "reports/local/results.json"
+        }
+      ],
+      [
+        "html",
+        {
+          "outputFolder": "playwright-report",
+          "open": "never"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "playwright-report/results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 8,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "api\\auth.spec.js",
+      "file": "api/auth.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Auth API",
+          "file": "api/auth.spec.js",
+          "line": 10,
+          "column": 6,
+          "specs": [
+            {
+              "title": "POST /api/auth/register creates a new user and returns a token",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 244,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:04.989Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "427269f70a03218eb4b5-9ae6141123cc1c29ac64",
+              "file": "api/auth.spec.js",
+              "line": 11,
+              "column": 3
+            },
+            {
+              "title": "POST /api/auth/register with an email that already exists returns 400",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 714,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:05.101Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "427269f70a03218eb4b5-573b075102ed617348b2",
+              "file": "api/auth.spec.js",
+              "line": 25,
+              "column": 3
+            },
+            {
+              "title": "POST /api/auth/register without required fields returns 400",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 52,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:05.101Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "427269f70a03218eb4b5-6386bc1f7f80c69f3d7e",
+              "file": "api/auth.spec.js",
+              "line": 41,
+              "column": 3
+            },
+            {
+              "title": "POST /api/auth/login with correct credentials returns a token",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 707,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:05.101Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "427269f70a03218eb4b5-40edd27dfb1ea4300ad5",
+              "file": "api/auth.spec.js",
+              "line": 48,
+              "column": 3
+            },
+            {
+              "title": "POST /api/auth/login with an incorrect password returns 400",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 707,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:05.035Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "427269f70a03218eb4b5-6ea055e44feac67882f8",
+              "file": "api/auth.spec.js",
+              "line": 66,
+              "column": 3
+            },
+            {
+              "title": "POST /api/auth/login with a non-existent email returns 400",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 5,
+                      "status": "passed",
+                      "duration": 84,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:05.155Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "427269f70a03218eb4b5-0d1440f1b2f980361718",
+              "file": "api/auth.spec.js",
+              "line": 80,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "api\\orders.spec.js",
+      "file": "api/orders.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Orders API",
+          "file": "api/orders.spec.js",
+          "line": 5,
+          "column": 6,
+          "specs": [
+            {
+              "title": "placing an order decreases the stock quantity",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 6,
+                      "status": "passed",
+                      "duration": 1883,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:05.132Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2dc3f1e491dddea4eb3d-c541a8983f3f101cb525",
+              "file": "api/orders.spec.js",
+              "line": 6,
+              "column": 3
+            },
+            {
+              "title": "cannot order more products than are available in stock",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 7,
+                      "status": "passed",
+                      "duration": 1803,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:05.132Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2dc3f1e491dddea4eb3d-a5c60fe79b565d2aa8af",
+              "file": "api/orders.spec.js",
+              "line": 26,
+              "column": 3
+            },
+            {
+              "title": "cannot place an order with an empty cart — 400",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 544,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:05.219Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2dc3f1e491dddea4eb3d-5fdd513f12bd6aa06f18",
+              "file": "api/orders.spec.js",
+              "line": 47,
+              "column": 3
+            },
+            {
+              "title": "cannot place an order without a token — 401",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 103,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:05.284Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2dc3f1e491dddea4eb3d-455ebeb213c5a95963df",
+              "file": "api/orders.spec.js",
+              "line": 58,
+              "column": 3
+            },
+            {
+              "title": "payment (pay) changes the order status to \"maksettu\"",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 5,
+                      "status": "passed",
+                      "duration": 1755,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:05.283Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2dc3f1e491dddea4eb3d-eb5b8a012560a865a11a",
+              "file": "api/orders.spec.js",
+              "line": 65,
+              "column": 3
+            },
+            {
+              "title": "cannot pay for another user’s order — 404",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1976,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:05.395Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2dc3f1e491dddea4eb3d-e84c9ccc1c46803566f3",
+              "file": "api/orders.spec.js",
+              "line": 85,
+              "column": 3
+            },
+            {
+              "title": "GET /api/orders returns only the user’s own orders",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 1852,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:05.779Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2dc3f1e491dddea4eb3d-f93293723d42d07b3a74",
+              "file": "api/orders.spec.js",
+              "line": 103,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "api\\products.spec.js",
+      "file": "api/products.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Products API",
+          "file": "api/products.spec.js",
+          "line": 5,
+          "column": 6,
+          "specs": [
+            {
+              "title": "admin can add a product, and it appears in its category",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 989,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:05.793Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "f1553ef5d21af5dfea45-a7c987a21fca9f555c9f",
+              "file": "api/products.spec.js",
+              "line": 6,
+              "column": 3
+            },
+            {
+              "title": "product from the \"old\" category does not appear in the \"new\" selection",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 1109,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:05.857Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "f1553ef5d21af5dfea45-b4b16ea76075918b369d",
+              "file": "api/products.spec.js",
+              "line": 19,
+              "column": 3
+            },
+            {
+              "title": "regular user (not admin) cannot add a product — 403",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 713,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:05.858Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "f1553ef5d21af5dfea45-328298fa7a49828cfcd8",
+              "file": "api/products.spec.js",
+              "line": 30,
+              "column": 3
+            },
+            {
+              "title": "cannot add a product without a token — 401",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 168,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:06.583Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "f1553ef5d21af5dfea45-53eaa9c689615c8b7faf",
+              "file": "api/products.spec.js",
+              "line": 41,
+              "column": 3
+            },
+            {
+              "title": "POST /api/products with an invalid category returns 400",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 852,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:06.762Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "f1553ef5d21af5dfea45-aeb1ad2033ffdadcfd6d",
+              "file": "api/products.spec.js",
+              "line": 48,
+              "column": 3
+            },
+            {
+              "title": "POST /api/products without a price returns 400",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 815,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:06.797Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "f1553ef5d21af5dfea45-d9bcaf3eac6b867582e9",
+              "file": "api/products.spec.js",
+              "line": 59,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "ui\\auth.spec.js",
+      "file": "ui/auth.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Authentication (UI)",
+          "file": "ui/auth.spec.js",
+          "line": 8,
+          "column": 6,
+          "specs": [
+            {
+              "title": "new user can register through the form and is redirected to the home page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 7,
+                      "status": "passed",
+                      "duration": 2672,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:06.981Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2ebdd61f397d04caf574-791b5339008458e2728d",
+              "file": "ui/auth.spec.js",
+              "line": 9,
+              "column": 3
+            },
+            {
+              "title": "already registered user can log in through the login form",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 2455,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:06.988Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2ebdd61f397d04caf574-e32cad9d4c8dc7c63393",
+              "file": "ui/auth.spec.js",
+              "line": 25,
+              "column": 3
+            },
+            {
+              "title": "incorrect password displays an error message and does not allow access",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 5,
+                      "status": "passed",
+                      "duration": 2329,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:07.058Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2ebdd61f397d04caf574-f4e7edb778c5a2a86e09",
+              "file": "ui/auth.spec.js",
+              "line": 41,
+              "column": 3
+            },
+            {
+              "title": "switching between login and registration forms works both ways",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 6,
+                      "status": "passed",
+                      "duration": 1544,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:07.064Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2ebdd61f397d04caf574-08c8f6352c3ae6d83f8c",
+              "file": "ui/auth.spec.js",
+              "line": 58,
+              "column": 3
+            },
+            {
+              "title": "the login screen has no logo or theme toggle",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1101,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:07.389Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "2ebdd61f397d04caf574-15170d551b8c1d23e835",
+              "file": "ui/auth.spec.js",
+              "line": 71,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "ui\\logo-animation.spec.js",
+      "file": "ui/logo-animation.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Animated logo (UI)",
+          "file": "ui/logo-animation.spec.js",
+          "line": 4,
+          "column": 6,
+          "specs": [
+            {
+              "title": "clicking the logo on the home screen plays the footstep animation without navigating away",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 1598,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:07.643Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5f4ef8ad49f41e17aec1-8db4df45c21b98eb4f34",
+              "file": "ui/logo-animation.spec.js",
+              "line": 10,
+              "column": 3
+            },
+            {
+              "title": "clicking the logo plays the animation every time, not just once",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 4039,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:07.642Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5f4ef8ad49f41e17aec1-e11264508fe7b0d46413",
+              "file": "ui/logo-animation.spec.js",
+              "line": 29,
+              "column": 3
+            },
+            {
+              "title": "clicking the logo on the shop screen plays the animation, then returns to the home screen",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 3135,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:07.658Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5f4ef8ad49f41e17aec1-8d1e0e6d2f727cea4d39",
+              "file": "ui/logo-animation.spec.js",
+              "line": 43,
+              "column": 3
+            },
+            {
+              "title": "clicking the logo on the wishlist page plays the animation, then returns to the home screen",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3843,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:08.591Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5f4ef8ad49f41e17aec1-211677ecf925199284ec",
+              "file": "ui/logo-animation.spec.js",
+              "line": 69,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "Shop/home header consistency (UI)",
+          "file": "ui/logo-animation.spec.js",
+          "line": 93,
+          "column": 6,
+          "specs": [
+            {
+              "title": "the shop header is the same height as the home screen header",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 6,
+                      "status": "passed",
+                      "duration": 1921,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:08.805Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "5f4ef8ad49f41e17aec1-15cb09db30332fb9c740",
+              "file": "ui/logo-animation.spec.js",
+              "line": 94,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "ui\\newer-features.spec.js",
+      "file": "ui/newer-features.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Theme toggle (UI)",
+          "file": "ui/newer-features.spec.js",
+          "line": 11,
+          "column": 6,
+          "specs": [
+            {
+              "title": "theme toggle switches between light and dark mode and remembers the choice",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 1849,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:09.403Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1d4301951bad06c544e9-ede0ee8da7180b3deda1",
+              "file": "ui/newer-features.spec.js",
+              "line": 12,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "Cart quantity and product photos (UI)",
+          "file": "ui/newer-features.spec.js",
+          "line": 35,
+          "column": 6,
+          "specs": [
+            {
+              "title": "cart shows a product photo per line and supports increasing/decreasing the quantity",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 3250,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:09.560Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1d4301951bad06c544e9-60ded4f62830c5a5c566",
+              "file": "ui/newer-features.spec.js",
+              "line": 36,
+              "column": 3
+            },
+            {
+              "title": "the \"+\" button is disabled once the cart quantity reaches the available stock",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 5,
+                      "status": "passed",
+                      "duration": 3151,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:09.559Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1d4301951bad06c544e9-42c31b2b59bf9ce81d5f",
+              "file": "ui/newer-features.spec.js",
+              "line": 70,
+              "column": 3
+            }
+          ]
+        },
+        {
+          "title": "Wishlist page (UI)",
+          "file": "ui/newer-features.spec.js",
+          "line": 88,
+          "column": 6,
+          "specs": [
+            {
+              "title": "user can open the dedicated favorites page from the home screen",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 7,
+                      "status": "passed",
+                      "duration": 4117,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:09.765Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1d4301951bad06c544e9-6315c433cce58638bb79",
+              "file": "ui/newer-features.spec.js",
+              "line": 89,
+              "column": 3
+            },
+            {
+              "title": "user can remove a product from favorites directly on the wishlist page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 6,
+                      "status": "passed",
+                      "duration": 3173,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:10.764Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "1d4301951bad06c544e9-3bfc0f23f4fabb8770a4",
+              "file": "ui/newer-features.spec.js",
+              "line": 112,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "ui\\search.spec.js",
+      "file": "ui/search.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Site search (UI)",
+          "file": "ui/search.spec.js",
+          "line": 10,
+          "column": 6,
+          "specs": [
+            {
+              "title": "typing a query shows a matching result with its name, price and category",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 2921,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:10.971Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "de61eaf08190f4484140-c7c3816d73fb87f8b714",
+              "file": "ui/search.spec.js",
+              "line": 11,
+              "column": 3
+            },
+            {
+              "title": "search tolerates a typo in the product name",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 2659,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:11.285Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "de61eaf08190f4484140-368b42aa736bf295c5f2",
+              "file": "ui/search.spec.js",
+              "line": 26,
+              "column": 3
+            },
+            {
+              "title": "search also matches the category, not just the product name",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 4,
+                      "status": "timedOut",
+                      "duration": 30181,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:11.840Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\Project\\VUE\\verkkokauppa\\e2e\\test-results\\ui-search-Site-search-UI-s-d97a9-y-not-just-the-product-name-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\Project\\VUE\\verkkokauppa\\e2e\\test-results\\ui-search-Site-search-UI-s-d97a9-y-not-just-the-product-name-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\Project\\VUE\\verkkokauppa\\e2e\\test-results\\ui-search-Site-search-UI-s-d97a9-y-not-just-the-product-name-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "de61eaf08190f4484140-6fc02aa432eda6b9eea6",
+              "file": "ui/search.spec.js",
+              "line": 43,
+              "column": 3
+            },
+            {
+              "title": "search also matches the product description",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 27824,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:12.468Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "de61eaf08190f4484140-565b562e2146d02cbd50",
+              "file": "ui/search.spec.js",
+              "line": 64,
+              "column": 3
+            },
+            {
+              "title": "a query that matches nothing shows the \"no results\" message",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 5,
+                      "status": "passed",
+                      "duration": 28354,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:12.735Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "de61eaf08190f4484140-84ae3c6599e9d0c23750",
+              "file": "ui/search.spec.js",
+              "line": 80,
+              "column": 3
+            },
+            {
+              "title": "clicking a result opens the product detail view for the right product",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "timedOut",
+                      "duration": 30099,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "D:\\Project\\VUE\\verkkokauppa\\e2e\\helpers.js",
+                            "column": 45,
+                            "line": 82
+                          },
+                          "message": "Error: locator.fill: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByPlaceholder('Sähköposti')\u001b[22m\n\n\n   at ..\\helpers.js:82\n\n  80 | export async function loginViaUI(page, email, password) {\n  81 |   await page.goto('/')\n> 82 |   await page.getByPlaceholder('Sähköposti').fill(email)\n     |                                             ^\n  83 |   await page.getByPlaceholder('Salasana').fill(password)\n  84 |   await page.getByRole('button', { name: 'Kirjaudu' }).click()\n  85 |   await page.getByRole('button', { name: 'Kirjaudu ulos' }).waitFor({ state: 'visible' })\n    at loginViaUI (D:\\Project\\VUE\\verkkokauppa\\e2e\\helpers.js:82:45)\n    at D:\\Project\\VUE\\verkkokauppa\\e2e\\tests\\ui\\search.spec.js:94:5"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:12.832Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\Project\\VUE\\verkkokauppa\\e2e\\test-results\\ui-search-Site-search-UI-c-53af5--view-for-the-right-product-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\Project\\VUE\\verkkokauppa\\e2e\\test-results\\ui-search-Site-search-UI-c-53af5--view-for-the-right-product-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\Project\\VUE\\verkkokauppa\\e2e\\test-results\\ui-search-Site-search-UI-c-53af5--view-for-the-right-product-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "de61eaf08190f4484140-1860c2cdd18c5f8ec3e9",
+              "file": "ui/search.spec.js",
+              "line": 89,
+              "column": 3
+            },
+            {
+              "title": "pressing Enter with a single result opens it, same as clicking",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 7,
+                      "status": "timedOut",
+                      "duration": 30124,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "D:\\Project\\VUE\\verkkokauppa\\e2e\\helpers.js",
+                            "column": 45,
+                            "line": 82
+                          },
+                          "message": "Error: locator.fill: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByPlaceholder('Sähköposti')\u001b[22m\n\n\n   at ..\\helpers.js:82\n\n  80 | export async function loginViaUI(page, email, password) {\n  81 |   await page.goto('/')\n> 82 |   await page.getByPlaceholder('Sähköposti').fill(email)\n     |                                             ^\n  83 |   await page.getByPlaceholder('Salasana').fill(password)\n  84 |   await page.getByRole('button', { name: 'Kirjaudu' }).click()\n  85 |   await page.getByRole('button', { name: 'Kirjaudu ulos' }).waitFor({ state: 'visible' })\n    at loginViaUI (D:\\Project\\VUE\\verkkokauppa\\e2e\\helpers.js:82:45)\n    at D:\\Project\\VUE\\verkkokauppa\\e2e\\tests\\ui\\search.spec.js:111:5"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:13.914Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\Project\\VUE\\verkkokauppa\\e2e\\test-results\\ui-search-Site-search-UI-p-034f8-t-opens-it-same-as-clicking-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\Project\\VUE\\verkkokauppa\\e2e\\test-results\\ui-search-Site-search-UI-p-034f8-t-opens-it-same-as-clicking-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\Project\\VUE\\verkkokauppa\\e2e\\test-results\\ui-search-Site-search-UI-p-034f8-t-opens-it-same-as-clicking-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "de61eaf08190f4484140-a305f00dd6463f46e8c6",
+              "file": "ui/search.spec.js",
+              "line": 106,
+              "column": 3
+            },
+            {
+              "title": "the clear button empties the field and closes the results",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "timedOut",
+                      "duration": 30125,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "D:\\Project\\VUE\\verkkokauppa\\e2e\\helpers.js",
+                            "column": 45,
+                            "line": 82
+                          },
+                          "message": "Error: locator.fill: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByPlaceholder('Sähköposti')\u001b[22m\n\n\n   at ..\\helpers.js:82\n\n  80 | export async function loginViaUI(page, email, password) {\n  81 |   await page.goto('/')\n> 82 |   await page.getByPlaceholder('Sähköposti').fill(email)\n     |                                             ^\n  83 |   await page.getByPlaceholder('Salasana').fill(password)\n  84 |   await page.getByRole('button', { name: 'Kirjaudu' }).click()\n  85 |   await page.getByRole('button', { name: 'Kirjaudu ulos' }).waitFor({ state: 'visible' })\n    at loginViaUI (D:\\Project\\VUE\\verkkokauppa\\e2e\\helpers.js:82:45)\n    at D:\\Project\\VUE\\verkkokauppa\\e2e\\tests\\ui\\search.spec.js:127:5"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:13.913Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\Project\\VUE\\verkkokauppa\\e2e\\test-results\\ui-search-Site-search-UI-t-ecdb8-ield-and-closes-the-results-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\Project\\VUE\\verkkokauppa\\e2e\\test-results\\ui-search-Site-search-UI-t-ecdb8-ield-and-closes-the-results-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\Project\\VUE\\verkkokauppa\\e2e\\test-results\\ui-search-Site-search-UI-t-ecdb8-ield-and-closes-the-results-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "de61eaf08190f4484140-f6555712ffe16bd208d8",
+              "file": "ui/search.spec.js",
+              "line": 122,
+              "column": 3
+            },
+            {
+              "title": "the search field is available on the home, shop and wishlist screens",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 6,
+                      "status": "timedOut",
+                      "duration": 30208,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "D:\\Project\\VUE\\verkkokauppa\\e2e\\helpers.js",
+                            "column": 61,
+                            "line": 85
+                          },
+                          "message": "Error: locator.waitFor: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('button', { name: 'Kirjaudu ulos' }) to be visible\u001b[22m\n\n\n   at ..\\helpers.js:85\n\n  83 |   await page.getByPlaceholder('Salasana').fill(password)\n  84 |   await page.getByRole('button', { name: 'Kirjaudu' }).click()\n> 85 |   await page.getByRole('button', { name: 'Kirjaudu ulos' }).waitFor({ state: 'visible' })\n     |                                                             ^\n  86 | }\n  87 |\n  88 |\n    at loginViaUI (D:\\Project\\VUE\\verkkokauppa\\e2e\\helpers.js:85:61)\n    at D:\\Project\\VUE\\verkkokauppa\\e2e\\tests\\ui\\search.spec.js:141:5"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:13.960Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\Project\\VUE\\verkkokauppa\\e2e\\test-results\\ui-search-Site-search-UI-t-f0319-e-shop-and-wishlist-screens-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\Project\\VUE\\verkkokauppa\\e2e\\test-results\\ui-search-Site-search-UI-t-f0319-e-shop-and-wishlist-screens-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\Project\\VUE\\verkkokauppa\\e2e\\test-results\\ui-search-Site-search-UI-t-f0319-e-shop-and-wishlist-screens-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "de61eaf08190f4484140-a45d0ccd9b1f8e16670d",
+              "file": "ui/search.spec.js",
+              "line": 139,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "ui\\shop.spec.js",
+      "file": "ui/shop.spec.js",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Catalog and cart (UI)",
+          "file": "ui/shop.spec.js",
+          "line": 11,
+          "column": 6,
+          "specs": [
+            {
+              "title": "user sees admin product in the catalog and can add it to the cart",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "timedOut",
+                      "duration": 30173,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "D:\\Project\\VUE\\verkkokauppa\\e2e\\helpers.js",
+                            "column": 45,
+                            "line": 82
+                          },
+                          "message": "Error: locator.fill: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByPlaceholder('Sähköposti')\u001b[22m\n\n\n   at ..\\helpers.js:82\n\n  80 | export async function loginViaUI(page, email, password) {\n  81 |   await page.goto('/')\n> 82 |   await page.getByPlaceholder('Sähköposti').fill(email)\n     |                                             ^\n  83 |   await page.getByPlaceholder('Salasana').fill(password)\n  84 |   await page.getByRole('button', { name: 'Kirjaudu' }).click()\n  85 |   await page.getByRole('button', { name: 'Kirjaudu ulos' }).waitFor({ state: 'visible' })\n    at loginViaUI (D:\\Project\\VUE\\verkkokauppa\\e2e\\helpers.js:82:45)\n    at D:\\Project\\VUE\\verkkokauppa\\e2e\\tests\\ui\\shop.spec.js:21:5"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:13.965Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\Project\\VUE\\verkkokauppa\\e2e\\test-results\\ui-shop-Catalog-and-cart-U-31263--and-can-add-it-to-the-cart-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\Project\\VUE\\verkkokauppa\\e2e\\test-results\\ui-shop-Catalog-and-cart-U-31263--and-can-add-it-to-the-cart-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\Project\\VUE\\verkkokauppa\\e2e\\test-results\\ui-shop-Catalog-and-cart-U-31263--and-can-add-it-to-the-cart-chromium\\trace.zip"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "586ea4116304a64eeabf-f0af9dd3379b939cf1ed",
+              "file": "ui/shop.spec.js",
+              "line": 12,
+              "column": 3
+            },
+            {
+              "title": "product with no stock cannot be added to the cart",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1138,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:40.319Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "586ea4116304a64eeabf-cecfb68676c9015fa131",
+              "file": "ui/shop.spec.js",
+              "line": 38,
+              "column": 3
+            },
+            {
+              "title": "checkout leads to the payment screen with the correct amount, and payment changes the status",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 5,
+                      "status": "passed",
+                      "duration": 4133,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:41.108Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "586ea4116304a64eeabf-886b4c7ab7aa96cb3d7f",
+              "file": "ui/shop.spec.js",
+              "line": 54,
+              "column": 3
+            },
+            {
+              "title": "admin sees the add product button",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1229,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:41.469Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "586ea4116304a64eeabf-be8c5cae316c205b94b7",
+              "file": "ui/shop.spec.js",
+              "line": 82,
+              "column": 3
+            },
+            {
+              "title": "regular user does not see the add product button",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 937,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:42.721Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "586ea4116304a64eeabf-134f91c7ca0653ebc9c6",
+              "file": "ui/shop.spec.js",
+              "line": 89,
+              "column": 3
+            },
+            {
+              "title": "admin can add a new product through the form, and it appears in the catalog",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 1741,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:44.626Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "586ea4116304a64eeabf-06a0338a87bda5c77435",
+              "file": "ui/shop.spec.js",
+              "line": 96,
+              "column": 3
+            },
+            {
+              "title": "user can favorite a product and filter the catalog down to favorites",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 9,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 1887,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:44.652Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "586ea4116304a64eeabf-5cf960a3138993bebb2d",
+              "file": "ui/shop.spec.js",
+              "line": 119,
+              "column": 3
+            },
+            {
+              "title": "admin can edit an existing product and see the change reflected in the catalog",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 1734,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:43.671Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "586ea4116304a64eeabf-a82c102da582da16193a",
+              "file": "ui/shop.spec.js",
+              "line": 150,
+              "column": 3
+            },
+            {
+              "title": "admin can delete a product from the edit form",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 10,
+                      "parallelIndex": 7,
+                      "status": "passed",
+                      "duration": 1390,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-09-23T09:17:46.413Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "586ea4116304a64eeabf-60b8175e4966e94a9415",
+              "file": "ui/shop.spec.js",
+              "line": 172,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-23T09:17:01.101Z",
+    "duration": 47670.295,
+    "expected": 46,
+    "skipped": 0,
+    "unexpected": 6,
+    "flaky": 0
+  }
+}

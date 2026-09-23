@@ -15,6 +15,8 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   reporter: [
     ['list'],
+    ['json', { outputFile: 'reports/local/results.json' }],
+
     // HTML report — for humans (Testiraportit / HTML)
     ['html', { outputFolder: 'playwright-report', open: 'never' }],
     // JSON report — for the Flutter Dashboard (Testiraportit / JSON)
