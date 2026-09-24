@@ -646,5 +646,74 @@
         "duration": 30124
       }
     ]
+  },
+  {
+    "id": 1790160234059,
+    "source": "local",
+    "date": "23.9.2026 klo 13.43.54",
+    "totalTests": 52,
+    "passedTests": 52,
+    "failedTests": 0,
+    "duration": 21403,
+    "failedTestsDetails": [],
+    "slowestTests": [
+      {
+        "name": "clicking the logo plays the animation every time, not just once",
+        "duration": 5420
+      },
+      {
+        "name": "clicking the logo on the shop screen plays the animation, then returns to the home screen",
+        "duration": 4995
+      },
+      {
+        "name": "new user can register through the form and is redirected to the home page",
+        "duration": 4368
+      },
+      {
+        "name": "incorrect password displays an error message and does not allow access",
+        "duration": 4273
+      },
+      {
+        "name": "clicking the logo on the home screen plays the footstep animation without navigating away",
+        "duration": 3804
+      }
+    ]
+  },
+  {
+    "id": 1790234028217,
+    "source": "local",
+    "date": "24.9.2026 klo 10.13.48",
+    "totalTests": 52,
+    "passedTests": 51,
+    "failedTests": 1,
+    "duration": 33287,
+    "failedTestsDetails": [
+      {
+        "name": "clicking the logo on the shop screen plays the animation, then returns to the home screen",
+        "error": "Error: expect(page).toHaveURL(expected) failed\n\nExpected: \"http://localhost:4301/\"\nReceived: \"http://localhost:4301/shop/new\"\nTimeout:  5000ms\n\nCall log:\n  - Expect \"toHaveURL\" with timeout 5000ms\n    13 × locator resolved to <html lang=\"en\" data-theme=\"light\">…</html>\n       - unexpected value \"http://localhost:4301/shop/new\"\n"
+      }
+    ],
+    "slowestTests": [
+      {
+        "name": "clicking the logo on the shop screen plays the animation, then returns to the home screen",
+        "duration": 10866
+      },
+      {
+        "name": "clicking the logo plays the animation every time, not just once",
+        "duration": 7032
+      },
+      {
+        "name": "already registered user can log in through the login form",
+        "duration": 5997
+      },
+      {
+        "name": "incorrect password displays an error message and does not allow access",
+        "duration": 5980
+      },
+      {
+        "name": "new user can register through the form and is redirected to the home page",
+        "duration": 5926
+      }
+    ]
   }
 ]

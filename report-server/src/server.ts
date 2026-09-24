@@ -5,6 +5,7 @@ import { exec, ExecException } from "child_process";
 import path from "path";
 import fs from "fs";
 import https from "https";
+import mongoose from "mongoose";
 
 const app = express();
 
@@ -16,6 +17,9 @@ const playwrightPath = path.resolve(
   "../../e2e"
 );
 
+// Playwright сам пише свій "сирий" звіт локально сюди після кожного прогону.
+// Це не сховище даних для API — просто місце, звідки ми його забираємо
+// одразу після exec() і кладемо в MongoDB (див. saveReport нижче).
 const localReportPath = path.join(
   playwrightPath,
   "reports",
@@ -23,52 +27,119 @@ const localReportPath = path.join(
   "results.json"
 );
 
-const localHistoryPath = path.join(
-  playwrightPath,
-  "reports",
-  "local",
-  "history.json"
+// ---- MongoDB: постійне сховище results/history (замість JSON-файлів) ----
+
+mongoose
+  .connect(process.env.MONGODB_URI as string)
+  .then(() => console.log("MongoDB connected"))
+  .catch((err) => console.error("MongoDB connection error:", err));
+
+const reportSchema = new mongoose.Schema(
+  {
+    source: { type: String, required: true, unique: true },
+    report: { type: mongoose.Schema.Types.Mixed, default: null },
+  },
+  { timestamps: true },
 );
 
-const githubReportPath = path.join(
-  playwrightPath,
-  "reports",
-  "github",
-  "results.json"
+const historySchema = new mongoose.Schema(
+  {
+    source: { type: String, required: true, unique: true },
+    history: { type: [mongoose.Schema.Types.Mixed], default: [] },
+  },
+  { timestamps: true },
 );
 
-const githubHistoryPath = path.join(
-  playwrightPath,
-  "reports",
-  "github",
-  "history.json"
-);
+const ReportModel = mongoose.model("Report", reportSchema);
+const HistoryModel = mongoose.model("History", historySchema);
 
-const getReportPath = (
-  source: string,
-) => {
-  return path.join(
-    playwrightPath,
-    "reports",
-    source,
-    "results.json",
-  );
+type SourceData = {
+  report: any | null;
+  reportUpdatedAt: Date | null;
+  history: any[];
 };
 
-const getHistoryPath = (
-  source: string,
-) => {
-  return path.join(
-    playwrightPath,
-    "reports",
-    source,
-    "history.json",
-  );
+// Кеш у пам'яті — читання йде звідси (швидко, синхронно, без змін
+// у логіці ендпоінтів нижче), а запис одночасно йде і сюди, і в MongoDB.
+const emptySourceData = (): SourceData => ({
+  report: null,
+  reportUpdatedAt: null,
+  history: [],
+});
+
+const store: Record<string, SourceData> = {
+  local: emptySourceData(),
+  github: emptySourceData(),
 };
 
-/*
- * Nykyiset tulokset
- */
+async function loadStore() {
+  const reports = await ReportModel.find({});
+
+  for (const r of reports) {
+    if (!store[r.source]) {
+      store[r.source] = emptySourceData();
+    }
+    store[r.source].report = r.report;
+    store[r.source].reportUpdatedAt =
+      (r as any).updatedAt ?? null;
+  }
+
+  const histories = await HistoryModel.find({});
+
+  for (const h of histories) {
+    if (!store[h.source]) {
+      store[h.source] = emptySourceData();
+    }
+    store[h.source].history = h.history;
+  }
+
+  console.log(
+    "Store завантажено з MongoDB:",
+    Object.keys(store),
+  );
+}
+
+async function saveReport(source: string, report: any) {
+  if (!store[source]) {
+    store[source] = emptySourceData();
+  }
+
+  const now = new Date();
+
+  store[source].report = report;
+  store[source].reportUpdatedAt = now;
+
+  await ReportModel.findOneAndUpdate(
+    { source },
+    { source, report },
+    { upsert: true },
+  );
+}
+
+async function saveHistory(source: string, history: any[]) {
+  if (!store[source]) {
+    store[source] = emptySourceData();
+  }
+  store[source].history = history;
+
+  await HistoryModel.findOneAndUpdate(
+    { source },
+    { source, history },
+    { upsert: true },
+  );
+}
+
+function getReport(source: string): any | null {
+  return store[source]?.report ?? null;
+}
+
+function getReportUpdatedAt(source: string): Date | null {
+  return store[source]?.reportUpdatedAt ?? null;
+}
+
+function getHistory(source: string): any[] {
+  return store[source]?.history ?? [];
+}
 
 app.get("/api/results", (req, res) => {
 
@@ -80,26 +151,8 @@ app.get("/api/results", (req, res) => {
 
   if (source === "all") {
 
-    let localReport: any = null;
-    let githubReport: any = null;
-
-    if (fs.existsSync(localReportPath)) {
-      localReport = JSON.parse(
-        fs.readFileSync(
-          localReportPath,
-          "utf8",
-        ),
-      );
-    }
-
-    if (fs.existsSync(githubReportPath)) {
-      githubReport = JSON.parse(
-        fs.readFileSync(
-          githubReportPath,
-          "utf8",
-        ),
-      );
-    }
+    const localReport = getReport("local");
+    const githubReport = getReport("github");
 
     const localPassed =
       localReport?.stats?.expected ?? 0;
@@ -131,12 +184,11 @@ app.get("/api/results", (req, res) => {
     });
   }
 
-  const reportPath =
-    getReportPath(source);
-
   try {
 
-    if (!fs.existsSync(reportPath)) {
+    const report = getReport(source);
+
+    if (!report) {
       return res.json({
         totalTests: 0,
         passedTests: 0,
@@ -145,12 +197,7 @@ app.get("/api/results", (req, res) => {
       });
     }
 
-    const report = JSON.parse(
-      fs.readFileSync(
-        reportPath,
-        "utf8",
-      ),
-    );
+    const updatedAt = getReportUpdatedAt(source);
 
     return res.json({
       totalTests:
@@ -163,10 +210,9 @@ app.get("/api/results", (req, res) => {
       failedTests:
         report.stats?.unexpected ?? 0,
 
-      lastRun: fs
-        .statSync(reportPath)
-        .mtime
-        .toLocaleString("fi-FI"),
+      lastRun: updatedAt
+        ? updatedAt.toLocaleString("fi-FI")
+        : "Ei raporttia",
     });
 
   } catch (error) {
@@ -179,9 +225,6 @@ app.get("/api/results", (req, res) => {
   }
 });
 
-/*
- * Testihistoria chartteja varten
- */
 app.get("/api/history", (req, res) => {
 
   const source =
@@ -191,58 +234,14 @@ app.get("/api/history", (req, res) => {
     ).toString();
 
   if (source === "all") {
-
-    let localHistory: any[] = [];
-    let githubHistory: any[] = [];
-
-    if (fs.existsSync(localHistoryPath)) {
-      localHistory = JSON.parse(
-        fs.readFileSync(
-          localHistoryPath,
-          "utf8"
-        )
-      );
-    }
-
-    if (fs.existsSync(githubHistoryPath)) {
-      githubHistory = JSON.parse(
-        fs.readFileSync(
-          githubHistoryPath,
-          "utf8"
-        )
-      );
-    }
-
     return res.json([
-      ...localHistory,
-      ...githubHistory,
+      ...getHistory("local"),
+      ...getHistory("github"),
     ]);
   }
 
-  const historyPath =
-    getHistoryPath(source);
-
   try {
-
-    if (!fs.existsSync(historyPath)) {
-      return res.json([]);
-    }
-
-    const content =
-      fs.readFileSync(
-        historyPath,
-        "utf8"
-      );
-
-    if (!content.trim()) {
-      return res.json([]);
-    }
-
-    const history =
-      JSON.parse(content);
-
-    return res.json(history);
-
+    return res.json(getHistory(source));
   } catch (error) {
 
     console.error(error);
@@ -259,17 +258,9 @@ const source =
     "local"
   ).toString();
 
-const reportPath =
-  getReportPath(source);
-
   try {
 
-  const report = JSON.parse(
-  fs.readFileSync(
-    reportPath,
-    "utf8"
-  )
-);
+    const report = getReport(source);
 
     const failedTests: any[] = [];
 
@@ -289,7 +280,6 @@ const reportPath =
                 ).replace(
                    /\u001b\[[0-9;]*m/g,
                    ""
-
                 )
               });
             }
@@ -302,7 +292,7 @@ const reportPath =
       }
     };
 
-    walkSuites(report.suites);
+    walkSuites(report?.suites ?? []);
 
     res.json(failedTests);
   } catch (error) {
@@ -311,22 +301,20 @@ const reportPath =
   }
 });
 
-app.post("/api/history/delete", (req, res) => {
+app.post("/api/history/delete", async (req, res) => {
   try {
     const ids = req.body.ids as number[];
 
-    let history = JSON.parse(
-      fs.readFileSync(localHistoryPath, "utf8")
-    );
+    const source =
+      (req.body.source ?? "local").toString();
+
+    let history = getHistory(source);
 
     history = history.filter(
       (item: any) => !ids.includes(item.id)
     );
 
-    fs.writeFileSync(
-      localHistoryPath,
-      JSON.stringify(history, null, 2)
-    );
+    await saveHistory(source, history);
 
     res.json({
       success: true,
@@ -349,16 +337,8 @@ app.get("/api/results/slowest-tests", (req, res) => {
     "local"
   ).toString();
 
-const reportPath =
-  getReportPath(source);
-
   try {
- const report = JSON.parse(
-  fs.readFileSync(
-    reportPath,
-    "utf8"
-  )
-);
+    const report = getReport(source);
 
     const tests: any[] = [];
 
@@ -383,7 +363,7 @@ const reportPath =
       }
     };
 
-    walkSuites(report.suites);
+    walkSuites(report?.suites ?? []);
 
     tests.sort(
       (a, b) =>
@@ -618,9 +598,6 @@ app.post(
   },
 );
 
-/*
- * Käynnistä Playwright
- */
 app.post("/api/run-tests", (req, res) => {
 
   console.log(
@@ -631,9 +608,10 @@ app.post("/api/run-tests", (req, res) => {
     "npx playwright test",
     {
       cwd: playwrightPath,
+      windowsHide: false,
     },
 
-    (
+    async (
       error: ExecException | null,
       stdout: string,
       stderr: string
@@ -663,16 +641,7 @@ app.post("/api/run-tests", (req, res) => {
           const failedTests =
             report.stats?.unexpected ?? 0;
 
-          let history: any[] = [];
-
-          if (fs.existsSync(localHistoryPath)) {
-            history = JSON.parse(
-              fs.readFileSync(
-                localHistoryPath,
-                "utf8"
-              )
-            );
-          }
+          let history: any[] = getHistory("local");
 
           const failedTestsDetails: any[] = [];
 const slowestTests: any[] = [];
@@ -763,14 +732,8 @@ history.push({
 if (history.length > 10) {
   history = history.slice(-10);
 }
-          fs.writeFileSync(
-            localHistoryPath,
-            JSON.stringify(
-              history,
-              null,
-              2
-            )
-          );
+          await saveReport("local", report);
+          await saveHistory("local", history);
 
         } catch (historyError) {
 
@@ -806,21 +769,14 @@ if (history.length > 10) {
 
 app.post(
   "/api/github/import",
-  (req, res) => {
+  async (req, res) => {
 
     try {
 
       const report =
         req.body;
 
-      fs.writeFileSync(
-        githubReportPath,
-        JSON.stringify(
-          report,
-          null,
-          2,
-        ),
-      );
+      await saveReport("github", report);
 
       const passedTests =
         report.stats?.expected ?? 0;
@@ -828,20 +784,7 @@ app.post(
       const failedTests =
         report.stats?.unexpected ?? 0;
 
-      let history: any[] = [];
-
-      if (
-        fs.existsSync(
-          githubHistoryPath,
-        )
-      ) {
-        history = JSON.parse(
-          fs.readFileSync(
-            githubHistoryPath,
-            "utf8",
-          ),
-        );
-      }
+      let history: any[] = getHistory("github");
 
       history.push({
         id: Date.now(),
@@ -873,14 +816,7 @@ app.post(
         history = history.slice(-10);
       }
 
-      fs.writeFileSync(
-        githubHistoryPath,
-        JSON.stringify(
-          history,
-          null,
-          2,
-        ),
-      );
+      await saveHistory("github", history);
 
       return res.json({
         success: true,
@@ -897,13 +833,18 @@ app.post(
   },
 );
 
-const PORT = 3000;
+const PORT = process.env.PORT
+  ? Number(process.env.PORT)
+  : 3000;
 
-app.listen(PORT, () => {
+async function start() {
+  await loadStore();
 
-  console.log(
-    `Server running on port ${PORT}`
-  );
+  app.listen(PORT, () => {
+    console.log(
+      `Server running on port ${PORT}`
+    );
+  });
+}
 
-});
-
+start();
