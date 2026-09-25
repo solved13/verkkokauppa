@@ -106,12 +106,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 517,
+                      "duration": 452,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:00.939Z",
+                      "startTime": "2026-09-25T06:37:12.045Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -140,12 +140,12 @@
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 655,
+                      "duration": 784,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:01.212Z",
+                      "startTime": "2026-09-25T06:37:12.105Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -174,12 +174,12 @@
                       "workerIndex": 2,
                       "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 52,
+                      "duration": 144,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:01.210Z",
+                      "startTime": "2026-09-25T06:37:12.124Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -208,12 +208,12 @@
                       "workerIndex": 3,
                       "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 852,
+                      "duration": 566,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:00.936Z",
+                      "startTime": "2026-09-25T06:37:11.981Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -242,12 +242,12 @@
                       "workerIndex": 4,
                       "parallelIndex": 4,
                       "status": "passed",
-                      "duration": 1001,
+                      "duration": 326,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:01.280Z",
+                      "startTime": "2026-09-25T06:37:11.868Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -276,12 +276,12 @@
                       "workerIndex": 5,
                       "parallelIndex": 5,
                       "status": "passed",
-                      "duration": 195,
+                      "duration": 169,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:01.264Z",
+                      "startTime": "2026-09-25T06:37:12.016Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -327,12 +327,12 @@
                       "workerIndex": 6,
                       "parallelIndex": 6,
                       "status": "passed",
-                      "duration": 2574,
+                      "duration": 1795,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:01.281Z",
+                      "startTime": "2026-09-25T06:37:12.075Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -361,12 +361,12 @@
                       "workerIndex": 7,
                       "parallelIndex": 7,
                       "status": "passed",
-                      "duration": 2343,
+                      "duration": 1645,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:01.153Z",
+                      "startTime": "2026-09-25T06:37:12.045Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -392,15 +392,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
+                      "workerIndex": 5,
+                      "parallelIndex": 5,
                       "status": "passed",
-                      "duration": 974,
+                      "duration": 580,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:01.322Z",
+                      "startTime": "2026-09-25T06:37:12.245Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -426,15 +426,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 5,
-                      "parallelIndex": 5,
+                      "workerIndex": 4,
+                      "parallelIndex": 4,
                       "status": "passed",
-                      "duration": 54,
+                      "duration": 37,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:01.510Z",
+                      "startTime": "2026-09-25T06:37:12.244Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -460,15 +460,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 4,
+                      "parallelIndex": 4,
                       "status": "passed",
-                      "duration": 2384,
+                      "duration": 1703,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:01.510Z",
+                      "startTime": "2026-09-25T06:37:12.295Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -483,7 +483,7 @@
             },
             {
               "title": "cannot pay for another user’s order — 404",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -494,20 +494,55 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 5,
-                      "parallelIndex": 5,
-                      "status": "passed",
-                      "duration": 2556,
-                      "errors": [],
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "failed",
+                      "duration": 1601,
+                      "error": {
+                        "message": "ReferenceError: stranger is not defined",
+                        "stack": "ReferenceError: stranger is not defined\n    at D:\\Project\\VUE\\verkkokauppa\\e2e\\tests\\api\\orders.spec.js:98:43",
+                        "location": {
+                          "file": "D:\\Project\\VUE\\verkkokauppa\\e2e\\tests\\api\\orders.spec.js",
+                          "column": 43,
+                          "line": 98
+                        },
+                        "snippet": "\u001b[0m \u001b[90m  96 |\u001b[39m\n \u001b[90m  97 |\u001b[39m     \u001b[36mconst\u001b[39m payRes \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m request\u001b[33m.\u001b[39mpost(\u001b[32m`${BACKEND_URL}/api/orders/${order._id}/pay`\u001b[39m\u001b[33m,\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  98 |\u001b[39m       headers\u001b[33m:\u001b[39m { \u001b[33mAuthorization\u001b[39m\u001b[33m:\u001b[39m \u001b[32m`Bearer ${stranger.token}`\u001b[39m }\u001b[33m,\u001b[39m\n \u001b[90m     |\u001b[39m                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m  99 |\u001b[39m     })\n \u001b[90m 100 |\u001b[39m     expect(payRes\u001b[33m.\u001b[39mstatus())\u001b[33m.\u001b[39mtoBe(\u001b[35m404\u001b[39m)\n \u001b[90m 101 |\u001b[39m   })\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\Project\\VUE\\verkkokauppa\\e2e\\tests\\api\\orders.spec.js",
+                            "column": 43,
+                            "line": 98
+                          },
+                          "message": "ReferenceError: stranger is not defined\n\n   96 |\n   97 |     const payRes = await request.post(`${BACKEND_URL}/api/orders/${order._id}/pay`, {\n>  98 |       headers: { Authorization: `Bearer ${stranger.token}` },\n      |                                           ^\n   99 |     })\n  100 |     expect(payRes.status()).toBe(404)\n  101 |   })\n    at D:\\Project\\VUE\\verkkokauppa\\e2e\\tests\\api\\orders.spec.js:98:43"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:01.573Z",
+                      "startTime": "2026-09-25T06:37:12.322Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\Project\\VUE\\verkkokauppa\\e2e\\test-results\\api-orders-Orders-API-cann-f8c65--another-user’s-order-—-404-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\Project\\VUE\\verkkokauppa\\e2e\\test-results\\api-orders-Orders-API-cann-f8c65--another-user’s-order-—-404-chromium\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\Project\\VUE\\verkkokauppa\\e2e\\tests\\api\\orders.spec.js",
+                        "column": 43,
+                        "line": 98
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
               "id": "2dc3f1e491dddea4eb3d-e84c9ccc1c46803566f3",
@@ -528,15 +563,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
-                      "parallelIndex": 3,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2532,
+                      "duration": 2047,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:01.840Z",
+                      "startTime": "2026-09-25T06:37:12.544Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -579,15 +614,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
-                      "parallelIndex": 1,
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 1620,
+                      "duration": 1046,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:01.917Z",
+                      "startTime": "2026-09-25T06:37:12.607Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -613,15 +648,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
+                      "workerIndex": 5,
+                      "parallelIndex": 5,
                       "status": "passed",
-                      "duration": 1551,
+                      "duration": 1021,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:02.320Z",
+                      "startTime": "2026-09-25T06:37:12.848Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -647,15 +682,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 4,
-                      "parallelIndex": 4,
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 914,
+                      "duration": 639,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:02.326Z",
+                      "startTime": "2026-09-25T06:37:12.938Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -681,15 +716,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 4,
-                      "parallelIndex": 4,
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 155,
+                      "duration": 56,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:03.253Z",
+                      "startTime": "2026-09-25T06:37:13.589Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -715,15 +750,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 4,
-                      "parallelIndex": 4,
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 709,
+                      "duration": 601,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:03.420Z",
+                      "startTime": "2026-09-25T06:37:13.655Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -749,15 +784,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 7,
-                      "parallelIndex": 7,
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 810,
+                      "duration": 778,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:03.558Z",
+                      "startTime": "2026-09-25T06:37:13.664Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -800,15 +835,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
-                      "parallelIndex": 1,
+                      "workerIndex": 7,
+                      "parallelIndex": 7,
                       "status": "passed",
-                      "duration": 2720,
+                      "duration": 2689,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:03.563Z",
+                      "startTime": "2026-09-25T06:37:13.744Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -834,15 +869,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
+                      "workerIndex": 5,
+                      "parallelIndex": 5,
                       "status": "passed",
-                      "duration": 2217,
+                      "duration": 1693,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:03.906Z",
+                      "startTime": "2026-09-25T06:37:13.904Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -871,12 +906,12 @@
                       "workerIndex": 6,
                       "parallelIndex": 6,
                       "status": "passed",
-                      "duration": 2154,
+                      "duration": 1829,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:03.906Z",
+                      "startTime": "2026-09-25T06:37:13.920Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -902,15 +937,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 8,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 1327,
+                      "duration": 1114,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:03.911Z",
+                      "startTime": "2026-09-25T06:37:16.096Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -939,12 +974,12 @@
                       "workerIndex": 4,
                       "parallelIndex": 4,
                       "status": "passed",
-                      "duration": 938,
+                      "duration": 1135,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:04.159Z",
+                      "startTime": "2026-09-25T06:37:14.030Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -987,15 +1022,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 5,
-                      "parallelIndex": 5,
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 2093,
+                      "duration": 2308,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:04.158Z",
+                      "startTime": "2026-09-25T06:37:14.270Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1005,7 +1040,7 @@
               ],
               "id": "5f4ef8ad49f41e17aec1-8db4df45c21b98eb4f34",
               "file": "ui/logo-animation.spec.js",
-              "line": 10,
+              "line": 6,
               "column": 3
             },
             {
@@ -1021,15 +1056,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 7,
-                      "parallelIndex": 7,
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 3751,
+                      "duration": 3599,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:04.392Z",
+                      "startTime": "2026-09-25T06:37:14.467Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1039,12 +1074,12 @@
               ],
               "id": "5f4ef8ad49f41e17aec1-e11264508fe7b0d46413",
               "file": "ui/logo-animation.spec.js",
-              "line": 29,
+              "line": 22,
               "column": 3
             },
             {
               "title": "clicking the logo on the shop screen plays the animation, then returns to the home screen",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -1055,25 +1090,65 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
-                      "parallelIndex": 3,
-                      "status": "passed",
-                      "duration": 3933,
-                      "errors": [],
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 7195,
+                      "error": {
+                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected: \u001b[32m\"http://localhost:4301/\"\u001b[39m\nReceived: \u001b[31m\"http://localhost:4301/\u001b[7mshop/new\u001b[27m\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 5000ms\u001b[22m\n\u001b[2m    13 × locator resolved to <html lang=\"en\" data-theme=\"light\">…</html>\u001b[22m\n\u001b[2m       - unexpected value \"http://localhost:4301/shop/new\"\u001b[22m\n",
+                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected: \u001b[32m\"http://localhost:4301/\"\u001b[39m\nReceived: \u001b[31m\"http://localhost:4301/\u001b[7mshop/new\u001b[27m\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 5000ms\u001b[22m\n\u001b[2m    13 × locator resolved to <html lang=\"en\" data-theme=\"light\">…</html>\u001b[22m\n\u001b[2m       - unexpected value \"http://localhost:4301/shop/new\"\u001b[22m\n\n    at D:\\Project\\VUE\\verkkokauppa\\e2e\\tests\\ui\\logo-animation.spec.js:55:24",
+                        "location": {
+                          "file": "D:\\Project\\VUE\\verkkokauppa\\e2e\\tests\\ui\\logo-animation.spec.js",
+                          "column": 24,
+                          "line": 55
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 53 |\u001b[39m\n \u001b[90m 54 |\u001b[39m     \u001b[33m/\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 55 |\u001b[39m     \u001b[36mawait\u001b[39m expect(page)\u001b[33m.\u001b[39mtoHaveURL(\u001b[32m'/'\u001b[39m\u001b[33m,\u001b[39m { timeout\u001b[33m:\u001b[39m \u001b[35m5000\u001b[39m })\n \u001b[90m    |\u001b[39m                        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 56 |\u001b[39m   })\n \u001b[90m 57 |\u001b[39m\n \u001b[90m 58 |\u001b[39m   test(\u001b[32m'clicking the logo on the wishlist page plays the animation, then returns to the home screen'\u001b[39m\u001b[33m,\u001b[39m \u001b[36masync\u001b[39m ({\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\Project\\VUE\\verkkokauppa\\e2e\\tests\\ui\\logo-animation.spec.js",
+                            "column": 24,
+                            "line": 55
+                          },
+                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveURL\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nExpected: \u001b[32m\"http://localhost:4301/\"\u001b[39m\nReceived: \u001b[31m\"http://localhost:4301/\u001b[7mshop/new\u001b[27m\"\u001b[39m\nTimeout:  5000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveURL\" with timeout 5000ms\u001b[22m\n\u001b[2m    13 × locator resolved to <html lang=\"en\" data-theme=\"light\">…</html>\u001b[22m\n\u001b[2m       - unexpected value \"http://localhost:4301/shop/new\"\u001b[22m\n\n\n  53 |\n  54 |     /\n> 55 |     await expect(page).toHaveURL('/', { timeout: 5000 })\n     |                        ^\n  56 |   })\n  57 |\n  58 |   test('clicking the logo on the wishlist page plays the animation, then returns to the home screen', async ({\n    at D:\\Project\\VUE\\verkkokauppa\\e2e\\tests\\ui\\logo-animation.spec.js:55:24"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:04.392Z",
+                      "startTime": "2026-09-25T06:37:14.623Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\Project\\VUE\\verkkokauppa\\e2e\\test-results\\ui-logo-animation-Animated-7d599--returns-to-the-home-screen-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\Project\\VUE\\verkkokauppa\\e2e\\test-results\\ui-logo-animation-Animated-7d599--returns-to-the-home-screen-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\Project\\VUE\\verkkokauppa\\e2e\\test-results\\ui-logo-animation-Animated-7d599--returns-to-the-home-screen-chromium\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\Project\\VUE\\verkkokauppa\\e2e\\tests\\ui\\logo-animation.spec.js",
+                        "column": 24,
+                        "line": 55
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
               "id": "5f4ef8ad49f41e17aec1-8d1e0e6d2f727cea4d39",
               "file": "ui/logo-animation.spec.js",
-              "line": 43,
+              "line": 36,
               "column": 3
             },
             {
@@ -1092,12 +1167,12 @@
                       "workerIndex": 4,
                       "parallelIndex": 4,
                       "status": "passed",
-                      "duration": 3634,
+                      "duration": 3827,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:05.216Z",
+                      "startTime": "2026-09-25T06:37:15.362Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1107,7 +1182,7 @@
               ],
               "id": "5f4ef8ad49f41e17aec1-211677ecf925199284ec",
               "file": "ui/logo-animation.spec.js",
-              "line": 69,
+              "line": 58,
               "column": 3
             }
           ]
@@ -1115,7 +1190,7 @@
         {
           "title": "Shop/home header consistency (UI)",
           "file": "ui/logo-animation.spec.js",
-          "line": 93,
+          "line": 82,
           "column": 6,
           "specs": [
             {
@@ -1131,15 +1206,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 5,
+                      "parallelIndex": 5,
                       "status": "passed",
-                      "duration": 1906,
+                      "duration": 1843,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:05.371Z",
+                      "startTime": "2026-09-25T06:37:15.729Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1149,7 +1224,7 @@
               ],
               "id": "5f4ef8ad49f41e17aec1-15cb09db30332fb9c740",
               "file": "ui/logo-animation.spec.js",
-              "line": 94,
+              "line": 83,
               "column": 3
             }
           ]
@@ -1166,7 +1241,7 @@
         {
           "title": "Theme toggle (UI)",
           "file": "ui/newer-features.spec.js",
-          "line": 11,
+          "line": 6,
           "column": 6,
           "specs": [
             {
@@ -1185,12 +1260,12 @@
                       "workerIndex": 6,
                       "parallelIndex": 6,
                       "status": "passed",
-                      "duration": 2382,
+                      "duration": 1660,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:06.186Z",
+                      "startTime": "2026-09-25T06:37:15.917Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1200,7 +1275,7 @@
               ],
               "id": "1d4301951bad06c544e9-ede0ee8da7180b3deda1",
               "file": "ui/newer-features.spec.js",
-              "line": 12,
+              "line": 7,
               "column": 3
             }
           ]
@@ -1208,7 +1283,7 @@
         {
           "title": "Cart quantity and product photos (UI)",
           "file": "ui/newer-features.spec.js",
-          "line": 35,
+          "line": 30,
           "column": 6,
           "specs": [
             {
@@ -1224,15 +1299,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
+                      "workerIndex": 7,
+                      "parallelIndex": 7,
                       "status": "passed",
-                      "duration": 3946,
+                      "duration": 3422,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:06.248Z",
+                      "startTime": "2026-09-25T06:37:16.535Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1242,7 +1317,7 @@
               ],
               "id": "1d4301951bad06c544e9-60ded4f62830c5a5c566",
               "file": "ui/newer-features.spec.js",
-              "line": 36,
+              "line": 31,
               "column": 3
             },
             {
@@ -1258,15 +1333,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 5,
-                      "parallelIndex": 5,
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 4127,
+                      "duration": 3181,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:06.369Z",
+                      "startTime": "2026-09-25T06:37:16.696Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1276,7 +1351,7 @@
               ],
               "id": "1d4301951bad06c544e9-42c31b2b59bf9ce81d5f",
               "file": "ui/newer-features.spec.js",
-              "line": 70,
+              "line": 65,
               "column": 3
             }
           ]
@@ -1284,7 +1359,7 @@
         {
           "title": "Wishlist page (UI)",
           "file": "ui/newer-features.spec.js",
-          "line": 88,
+          "line": 83,
           "column": 6,
           "specs": [
             {
@@ -1300,15 +1375,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
-                      "parallelIndex": 1,
+                      "workerIndex": 8,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 3472,
+                      "duration": 2645,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:06.385Z",
+                      "startTime": "2026-09-25T06:37:17.368Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1318,7 +1393,7 @@
               ],
               "id": "1d4301951bad06c544e9-6315c433cce58638bb79",
               "file": "ui/newer-features.spec.js",
-              "line": 89,
+              "line": 84,
               "column": 3
             },
             {
@@ -1334,15 +1409,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 5,
+                      "parallelIndex": 5,
                       "status": "passed",
-                      "duration": 3113,
+                      "duration": 2804,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:07.309Z",
+                      "startTime": "2026-09-25T06:37:17.607Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1352,7 +1427,7 @@
               ],
               "id": "1d4301951bad06c544e9-3bfc0f23f4fabb8770a4",
               "file": "ui/newer-features.spec.js",
-              "line": 112,
+              "line": 106,
               "column": 3
             }
           ]
@@ -1369,7 +1444,7 @@
         {
           "title": "Site search (UI)",
           "file": "ui/search.spec.js",
-          "line": 10,
+          "line": 5,
           "column": 6,
           "specs": [
             {
@@ -1385,15 +1460,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 7,
-                      "parallelIndex": 7,
+                      "workerIndex": 6,
+                      "parallelIndex": 6,
                       "status": "passed",
-                      "duration": 3412,
+                      "duration": 3254,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:08.329Z",
+                      "startTime": "2026-09-25T06:37:17.599Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1403,7 +1478,7 @@
               ],
               "id": "de61eaf08190f4484140-c7c3816d73fb87f8b714",
               "file": "ui/search.spec.js",
-              "line": 11,
+              "line": 6,
               "column": 3
             },
             {
@@ -1422,12 +1497,12 @@
                       "workerIndex": 3,
                       "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 3925,
+                      "duration": 2443,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:08.547Z",
+                      "startTime": "2026-09-25T06:37:18.220Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1437,7 +1512,7 @@
               ],
               "id": "de61eaf08190f4484140-368b42aa736bf295c5f2",
               "file": "ui/search.spec.js",
-              "line": 26,
+              "line": 21,
               "column": 3
             },
             {
@@ -1453,15 +1528,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 6,
-                      "parallelIndex": 6,
+                      "workerIndex": 4,
+                      "parallelIndex": 4,
                       "status": "passed",
-                      "duration": 3286,
+                      "duration": 2276,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:08.614Z",
+                      "startTime": "2026-09-25T06:37:19.238Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1471,7 +1546,7 @@
               ],
               "id": "de61eaf08190f4484140-6fc02aa432eda6b9eea6",
               "file": "ui/search.spec.js",
-              "line": 43,
+              "line": 37,
               "column": 3
             },
             {
@@ -1487,15 +1562,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 4,
-                      "parallelIndex": 4,
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 3126,
+                      "duration": 2666,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:08.890Z",
+                      "startTime": "2026-09-25T06:37:19.923Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1505,7 +1580,7 @@
               ],
               "id": "de61eaf08190f4484140-565b562e2146d02cbd50",
               "file": "ui/search.spec.js",
-              "line": 64,
+              "line": 54,
               "column": 3
             },
             {
@@ -1521,15 +1596,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
-                      "parallelIndex": 1,
+                      "workerIndex": 7,
+                      "parallelIndex": 7,
                       "status": "passed",
-                      "duration": 1816,
+                      "duration": 1064,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:09.886Z",
+                      "startTime": "2026-09-25T06:37:19.990Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1539,7 +1614,7 @@
               ],
               "id": "de61eaf08190f4484140-84ae3c6599e9d0c23750",
               "file": "ui/search.spec.js",
-              "line": 80,
+              "line": 70,
               "column": 3
             },
             {
@@ -1555,15 +1630,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
+                      "workerIndex": 8,
                       "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 3444,
+                      "duration": 3239,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:10.230Z",
+                      "startTime": "2026-09-25T06:37:20.048Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1573,7 +1648,7 @@
               ],
               "id": "de61eaf08190f4484140-1860c2cdd18c5f8ec3e9",
               "file": "ui/search.spec.js",
-              "line": 89,
+              "line": 79,
               "column": 3
             },
             {
@@ -1589,15 +1664,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 5,
+                      "parallelIndex": 5,
                       "status": "passed",
-                      "duration": 3902,
+                      "duration": 2891,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:10.462Z",
+                      "startTime": "2026-09-25T06:37:20.441Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1607,12 +1682,12 @@
               ],
               "id": "de61eaf08190f4484140-a305f00dd6463f46e8c6",
               "file": "ui/search.spec.js",
-              "line": 106,
+              "line": 96,
               "column": 3
             },
             {
               "title": "the clear button empties the field and closes the results",
-              "ok": true,
+              "ok": false,
               "tags": [],
               "tests": [
                 {
@@ -1623,25 +1698,65 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 5,
-                      "parallelIndex": 5,
-                      "status": "passed",
-                      "duration": 3202,
-                      "errors": [],
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "failed",
+                      "duration": 1082,
+                      "error": {
+                        "message": "ReferenceError: buyer is not defined",
+                        "stack": "ReferenceError: buyer is not defined\n    at D:\\Project\\VUE\\verkkokauppa\\e2e\\tests\\ui\\search.spec.js:117:28",
+                        "location": {
+                          "file": "D:\\Project\\VUE\\verkkokauppa\\e2e\\tests\\ui\\search.spec.js",
+                          "column": 28,
+                          "line": 117
+                        },
+                        "snippet": "\u001b[0m \u001b[90m 115 |\u001b[39m     \u001b[90m//const buyer = await registerUser(request, 'search-clear-buyer')\u001b[39m\n \u001b[90m 116 |\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 117 |\u001b[39m     \u001b[36mawait\u001b[39m loginViaUI(page\u001b[33m,\u001b[39m buyer\u001b[33m.\u001b[39memail\u001b[33m,\u001b[39m buyer\u001b[33m.\u001b[39mpassword)\n \u001b[90m     |\u001b[39m                            \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 118 |\u001b[39m\n \u001b[90m 119 |\u001b[39m     \u001b[36mconst\u001b[39m input \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mgetByPlaceholder(\u001b[32m'Hae tuotteita…'\u001b[39m)\n \u001b[90m 120 |\u001b[39m     \u001b[36mawait\u001b[39m input\u001b[33m.\u001b[39mfill(product\u001b[33m.\u001b[39mname)\u001b[0m"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "D:\\Project\\VUE\\verkkokauppa\\e2e\\tests\\ui\\search.spec.js",
+                            "column": 28,
+                            "line": 117
+                          },
+                          "message": "ReferenceError: buyer is not defined\n\n  115 |     //const buyer = await registerUser(request, 'search-clear-buyer')\n  116 |\n> 117 |     await loginViaUI(page, buyer.email, buyer.password)\n      |                            ^\n  118 |\n  119 |     const input = page.getByPlaceholder('Hae tuotteita…')\n  120 |     await input.fill(product.name)\n    at D:\\Project\\VUE\\verkkokauppa\\e2e\\tests\\ui\\search.spec.js:117:28"
+                        }
+                      ],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:10.524Z",
+                      "startTime": "2026-09-25T06:37:20.681Z",
                       "annotations": [],
-                      "attachments": []
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "D:\\Project\\VUE\\verkkokauppa\\e2e\\test-results\\ui-search-Site-search-UI-t-ecdb8-ield-and-closes-the-results-chromium\\test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\Project\\VUE\\verkkokauppa\\e2e\\test-results\\ui-search-Site-search-UI-t-ecdb8-ield-and-closes-the-results-chromium\\error-context.md"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "D:\\Project\\VUE\\verkkokauppa\\e2e\\test-results\\ui-search-Site-search-UI-t-ecdb8-ield-and-closes-the-results-chromium\\trace.zip"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "D:\\Project\\VUE\\verkkokauppa\\e2e\\tests\\ui\\search.spec.js",
+                        "column": 28,
+                        "line": 117
+                      }
                     }
                   ],
-                  "status": "expected"
+                  "status": "unexpected"
                 }
               ],
               "id": "de61eaf08190f4484140-f6555712ffe16bd208d8",
               "file": "ui/search.spec.js",
-              "line": 122,
+              "line": 112,
               "column": 3
             },
             {
@@ -1657,15 +1772,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
-                      "parallelIndex": 1,
+                      "workerIndex": 6,
+                      "parallelIndex": 6,
                       "status": "passed",
-                      "duration": 2095,
+                      "duration": 1934,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:11.719Z",
+                      "startTime": "2026-09-25T06:37:20.879Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1675,7 +1790,7 @@
               ],
               "id": "de61eaf08190f4484140-a45d0ccd9b1f8e16670d",
               "file": "ui/search.spec.js",
-              "line": 139,
+              "line": 129,
               "column": 3
             }
           ]
@@ -1711,12 +1826,12 @@
                       "workerIndex": 7,
                       "parallelIndex": 7,
                       "status": "passed",
-                      "duration": 3382,
+                      "duration": 2776,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:11.783Z",
+                      "startTime": "2026-09-25T06:37:21.082Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1742,15 +1857,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 6,
-                      "parallelIndex": 6,
+                      "workerIndex": 4,
+                      "parallelIndex": 4,
                       "status": "passed",
-                      "duration": 2861,
+                      "duration": 2655,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:11.955Z",
+                      "startTime": "2026-09-25T06:37:21.553Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1760,7 +1875,7 @@
               ],
               "id": "586ea4116304a64eeabf-cecfb68676c9015fa131",
               "file": "ui/shop.spec.js",
-              "line": 38,
+              "line": 37,
               "column": 3
             },
             {
@@ -1776,15 +1891,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 4,
-                      "parallelIndex": 4,
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 3879,
+                      "duration": 3214,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:12.049Z",
+                      "startTime": "2026-09-25T06:37:22.640Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1794,7 +1909,7 @@
               ],
               "id": "586ea4116304a64eeabf-886b4c7ab7aa96cb3d7f",
               "file": "ui/shop.spec.js",
-              "line": 54,
+              "line": 53,
               "column": 3
             },
             {
@@ -1810,15 +1925,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 9,
                       "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 2179,
+                      "duration": 1618,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:12.507Z",
+                      "startTime": "2026-09-25T06:37:25.653Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1828,7 +1943,7 @@
               ],
               "id": "586ea4116304a64eeabf-be8c5cae316c205b94b7",
               "file": "ui/shop.spec.js",
-              "line": 82,
+              "line": 79,
               "column": 3
             },
             {
@@ -1844,15 +1959,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 2,
-                      "parallelIndex": 2,
+                      "workerIndex": 6,
+                      "parallelIndex": 6,
                       "status": "passed",
-                      "duration": 1823,
+                      "duration": 1685,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:13.735Z",
+                      "startTime": "2026-09-25T06:37:22.844Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1862,7 +1977,7 @@
               ],
               "id": "586ea4116304a64eeabf-134f91c7ca0653ebc9c6",
               "file": "ui/shop.spec.js",
-              "line": 89,
+              "line": 86,
               "column": 3
             },
             {
@@ -1878,15 +1993,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 5,
-                      "parallelIndex": 5,
+                      "workerIndex": 10,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2739,
+                      "duration": 1491,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:13.764Z",
+                      "startTime": "2026-09-25T06:37:26.057Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1896,7 +2011,7 @@
               ],
               "id": "586ea4116304a64eeabf-06a0338a87bda5c77435",
               "file": "ui/shop.spec.js",
-              "line": 96,
+              "line": 93,
               "column": 3
             },
             {
@@ -1912,15 +2027,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 1,
-                      "parallelIndex": 1,
+                      "workerIndex": 8,
+                      "parallelIndex": 2,
                       "status": "passed",
-                      "duration": 3186,
+                      "duration": 2819,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:13.859Z",
+                      "startTime": "2026-09-25T06:37:23.316Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1930,7 +2045,7 @@
               ],
               "id": "586ea4116304a64eeabf-5cf960a3138993bebb2d",
               "file": "ui/shop.spec.js",
-              "line": 119,
+              "line": 114,
               "column": 3
             },
             {
@@ -1946,15 +2061,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
+                      "workerIndex": 5,
+                      "parallelIndex": 5,
                       "status": "passed",
-                      "duration": 2328,
+                      "duration": 2633,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:14.419Z",
+                      "startTime": "2026-09-25T06:37:23.362Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1964,7 +2079,7 @@
               ],
               "id": "586ea4116304a64eeabf-a82c102da582da16193a",
               "file": "ui/shop.spec.js",
-              "line": 150,
+              "line": 141,
               "column": 3
             },
             {
@@ -1980,15 +2095,15 @@
                   "projectName": "chromium",
                   "results": [
                     {
-                      "workerIndex": 3,
-                      "parallelIndex": 3,
+                      "workerIndex": 7,
+                      "parallelIndex": 7,
                       "status": "passed",
-                      "duration": 2270,
+                      "duration": 2290,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-09-24T07:17:14.709Z",
+                      "startTime": "2026-09-25T06:37:23.872Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1998,7 +2113,7 @@
               ],
               "id": "586ea4116304a64eeabf-60b8175e4966e94a9415",
               "file": "ui/shop.spec.js",
-              "line": 172,
+              "line": 163,
               "column": 3
             }
           ]
@@ -2008,11 +2123,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-09-24T07:16:56.977Z",
-    "duration": 20674.183,
-    "expected": 52,
+    "startTime": "2026-09-25T06:37:07.945Z",
+    "duration": 20441.986999999997,
+    "expected": 49,
     "skipped": 0,
-    "unexpected": 0,
+    "unexpected": 3,
     "flaky": 0
   }
 }

@@ -11,7 +11,7 @@ test.describe('Authentication (UI)', () => {
 
     await page.goto('/')
 
-    // The login form is open initially — switch to registration
+ 
     await page.getByRole('link', { name: 'Rekisteröidy' }).click()
 
     await page.getByPlaceholder('Nimi').fill('Testi Käyttäjä')
@@ -51,7 +51,7 @@ test.describe('Authentication (UI)', () => {
     await page.getByRole('button', { name: 'Kirjaudu' }).click()
 
     await expect(page.getByText('Väärä sähköposti tai salasana')).toBeVisible()
-    // Still on the login screen, did not reach the home page
+   
     await expect(page.getByRole('button', { name: 'Kirjaudu' })).toBeVisible()
   })
 

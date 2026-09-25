@@ -1,11 +1,6 @@
 import { test, expect } from '@playwright/test'
 import { registerUser, registerAdmin, createProduct, uniqueProductName, loginViaUI, openCategory } from '../../helpers.js'
 
-// The site-wide search field (SearchBar.vue) lives in the header of every
-// logged-in screen (home, shop, wishlist) and searches product name +
-// description + category across the whole catalog, with typo tolerance.
-// It fetches the full product list once per page load, so every test here
-// logs in fresh and searches from a screen that has it.
 
 test.describe('Site search (UI)', () => {
   test('typing a query shows a matching result with its name, price and category', async ({ page, request }) => {
@@ -25,8 +20,7 @@ test.describe('Site search (UI)', () => {
 
   test('search tolerates a typo in the product name', async ({ page, request }) => {
     const admin = await registerAdmin(request, 'search-typo')
-    // "Nike" mistyped as "Nikee" (one extra letter) is a single-edit typo,
-    // which is within the tolerance for a 5-letter token.
+    
     const product = await createProduct(request, admin.token, {
       name: uniqueProductName('Nike Runner'),
       category: 'new',
@@ -42,11 +36,7 @@ test.describe('Site search (UI)', () => {
 
   test('search also matches the category, not just the product name', async ({ page, request }) => {
     const admin = await registerAdmin(request, 'search-category')
-    // A plain, category-less name — the only reason this should show up for
-    // a "retro" search is that it's in the "old" category. Combining
-    // "retro" with the product's own unique suffix keeps the match specific
-    // to this product even though many other "old" products may exist in
-    // the shared test database at the same time.
+   
     const product = await createProduct(request, admin.token, {
       name: uniqueProductName('Perus'),
       category: 'old',
@@ -122,7 +112,7 @@ test.describe('Site search (UI)', () => {
   test('the clear button empties the field and closes the results', async ({ page, request }) => {
     const admin = await registerAdmin(request, 'search-clear')
     const product = await createProduct(request, admin.token, { category: 'new' })
-    const buyer = await registerUser(request, 'search-clear-buyer')
+    //const buyer = await registerUser(request, 'search-clear-buyer')
 
     await loginViaUI(page, buyer.email, buyer.password)
 

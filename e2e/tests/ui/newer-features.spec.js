@@ -1,12 +1,7 @@
 import { test, expect } from '@playwright/test'
 import { registerUser, registerAdmin, createProduct, loginViaUI, openCategory } from '../../helpers.js'
 
-// NOTE: these tests cover the theme toggle, the cart's quantity stepper +
-// product photos, and the dedicated /wishlist page. Those features exist in
-// this project's source (store.js, App.vue, ShopView.vue, HomeView.vue,
-// WishlistView.vue, ThemeToggle.vue, router/index.js) but are not yet
-// committed/pushed to the repository the CI workflow builds from — so this
-// file will fail until that code is committed and pushed alongside it.
+
 
 test.describe('Theme toggle (UI)', () => {
   test('theme toggle switches between light and dark mode and remembers the choice', async ({ page, request }) => {
@@ -26,7 +21,7 @@ test.describe('Theme toggle (UI)', () => {
     expect(['light', 'dark']).toContain(after)
     await expect(toggle).toHaveText(after === 'dark' ? '☀️' : '🌙')
 
-    // The choice is persisted (localStorage) and survives a page reload.
+
     await page.reload()
     await expect(page.locator('html')).toHaveAttribute('data-theme', after)
   })
@@ -61,7 +56,7 @@ test.describe('Cart quantity and product photos (UI)', () => {
     await cartItem.getByRole('button', { name: 'Vähennä määrää' }).click()
     await expect(cartItem.locator('.qty-value')).toHaveText('1')
 
-    // Decreasing the last remaining unit removes the product from the cart entirely.
+    
     await cartItem.getByRole('button', { name: 'Vähennä määrää' }).click()
     await expect(page.locator('.cart-list .cart-item', { hasText: product.name })).toHaveCount(0)
     await expect(page.locator('.cart-empty')).toBeVisible()
@@ -99,8 +94,7 @@ test.describe('Wishlist page (UI)', () => {
       .locator('.wishlist-btn:not(.edit-product-btn)')
       .click()
 
-    // Back to the home screen — the "♥ N" link there only appears once
-    // something has been favorited.
+
     await page.goto('/')
     await page.getByRole('button', { name: '♥ 1' }).click()
 

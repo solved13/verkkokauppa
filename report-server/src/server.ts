@@ -17,9 +17,7 @@ const playwrightPath = path.resolve(
   "../../e2e"
 );
 
-// Playwright сам пише свій "сирий" звіт локально сюди після кожного прогону.
-// Це не сховище даних для API — просто місце, звідки ми його забираємо
-// одразу після exec() і кладемо в MongoDB (див. saveReport нижче).
+
 const localReportPath = path.join(
   playwrightPath,
   "reports",
@@ -27,7 +25,7 @@ const localReportPath = path.join(
   "results.json"
 );
 
-// ---- MongoDB: постійне сховище results/history (замість JSON-файлів) ----
+
 
 mongoose
   .connect(process.env.MONGODB_URI as string)
@@ -59,8 +57,7 @@ type SourceData = {
   history: any[];
 };
 
-// Кеш у пам'яті — читання йде звідси (швидко, синхронно, без змін
-// у логіці ендпоінтів нижче), а запис одночасно йде і сюди, і в MongoDB.
+
 const emptySourceData = (): SourceData => ({
   report: null,
   reportUpdatedAt: null,

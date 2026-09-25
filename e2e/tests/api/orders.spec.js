@@ -86,7 +86,7 @@ test.describe('Orders API', () => {
     const admin = await registerAdmin(request, 'orders-foreign')
     const product = await createProduct(request, admin.token, { stock: 3, price: 15 })
     const owner = await registerUser(request, 'orders-foreign-owner')
-    const stranger = await registerUser(request, 'orders-foreign-stranger')
+    //const stranger = await registerUser(request, 'orders-foreign-stranger')
 
     const orderRes = await request.post(`${BACKEND_URL}/api/orders`, {
       headers: { Authorization: `Bearer ${owner.token}` },

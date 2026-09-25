@@ -29,8 +29,7 @@ test.describe('Catalog and cart (UI)', () => {
 
     await expect(page.locator('.cart-summary')).toContainText('1 kpl')
 
-    // The cart is shown as a separate panel (drawer), opened only after clicking
-    // "cart-summary" in the header — the product list is not in the DOM before that.
+    
     await page.locator('.cart-summary').click()
     await expect(page.locator('.cart-list')).toContainText(product.name)
   })
@@ -73,9 +72,7 @@ test.describe('Catalog and cart (UI)', () => {
     await expect(page.getByText('Maksettava summa: 25 €')).toBeVisible()
 
     await page.getByRole('button', { name: 'Simuloi maksu' }).click()
-    // The default 5s expect timeout can be too tight for the payment
-    // request to round-trip while many workers share the same backend/DB
-    // in a full parallel run — give it more room here.
+ 
     await expect(page.getByText('✅ Tilaus on maksettu!')).toBeVisible({ timeout: 15000 })
   })
 
@@ -110,9 +107,7 @@ test.describe('Catalog and cart (UI)', () => {
 
     await page.getByRole('button', { name: 'Tallenna tuote' }).click()
 
-    // On success the page automatically returns to the catalog — we check the
-    // result there, since the intermediate "✅ Tuote lisätty!" message is only
-    // visible for too short a time for a stable assertion.
+
     await expect(page.locator('.product-card', { hasText: newName })).toBeVisible()
   })
 
@@ -128,24 +123,20 @@ test.describe('Catalog and cart (UI)', () => {
     await expect(page.locator('.product-card', { hasText: liked.name })).toBeVisible()
     await expect(page.locator('.product-card', { hasText: other.name })).toBeVisible()
 
-    // Favorite only one of the two products.
+  
     await page
       .locator('.product-card', { hasText: liked.name })
       .locator('.wishlist-btn:not(.edit-product-btn)')
       .click()
 
-    // The "♥ Suosikit" toggle in the header filters the grid down to favorites only.
+   
     await page.getByRole('button', { name: /Suosikit/ }).click()
 
     await expect(page.locator('.product-card', { hasText: liked.name })).toBeVisible()
     await expect(page.locator('.product-card', { hasText: other.name })).toHaveCount(0)
   })
 
-  // Note: the "♥ N" link on the home screen now opens the dedicated
-  // /wishlist page (not a /shop/<category>?wishlist=1 pre-filter — that
-  // design was replaced once /wishlist shipped). That flow is covered by
-  // 'user can open the dedicated favorites page from the home screen' in
-  // newer-features.spec.js, so it isn't duplicated here.
+ 
 
   test('admin can edit an existing product and see the change reflected in the catalog', async ({
     page,
