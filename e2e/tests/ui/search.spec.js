@@ -112,7 +112,7 @@ test.describe('Site search (UI)', () => {
   test('the clear button empties the field and closes the results', async ({ page, request }) => {
     const admin = await registerAdmin(request, 'search-clear')
     const product = await createProduct(request, admin.token, { category: 'new' })
-    //const buyer = await registerUser(request, 'search-clear-buyer')
+    const buyer = await registerUser(request, 'search-clear-buyer')
 
     await loginViaUI(page, buyer.email, buyer.password)
 
