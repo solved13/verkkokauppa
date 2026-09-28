@@ -91,7 +91,7 @@ async function loadStore() {
   }
 
   console.log(
-    "Store завантажено з MongoDB:",
+    "Store download MongoDB:",
     Object.keys(store),
   );
 }
@@ -783,6 +783,50 @@ app.post(
 
       let history: any[] = getHistory("github");
 
+      const failedTestsDetails: any[] = [];
+      const slowestTests: any[] = [];
+
+      const walkSuites = (suites: any[]) => {
+        for (const suite of suites) {
+          if (suite.specs) {
+            for (const spec of suite.specs) {
+              const test = spec.tests?.[0];
+              const result = test?.results?.[0];
+
+              if (!result) {
+                continue;
+              }
+
+              if (!spec.ok) {
+                failedTestsDetails.push({
+                  name: spec.title,
+                  error: (
+                    result?.error?.message ??
+                    "Unknown error"
+                  ).replace(
+                    /\u001b\[[0-9;]*m/g,
+                    "",
+                  ),
+                });
+              }
+
+              slowestTests.push({
+                name: spec.title,
+                duration: result.duration ?? 0,
+              });
+            }
+          }
+
+          if (suite.suites) {
+            walkSuites(suite.suites);
+          }
+        }
+      };
+
+      walkSuites(report?.suites ?? []);
+
+      slowestTests.sort((a, b) => b.duration - a.duration);
+
       history.push({
         id: Date.now(),
 
@@ -807,6 +851,10 @@ app.post(
             report.stats
               ?.duration ?? 0,
           ),
+
+        failedTestsDetails,
+
+        slowestTests: slowestTests.slice(0, 5),
       });
 
       if (history.length > 10) {
