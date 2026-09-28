@@ -91,7 +91,7 @@ async function loadStore() {
   }
 
   console.log(
-    "Store download MongoDB:",
+    "Store завантажено з MongoDB:",
     Object.keys(store),
   );
 }
@@ -208,7 +208,9 @@ app.get("/api/results", (req, res) => {
         report.stats?.unexpected ?? 0,
 
       lastRun: updatedAt
-        ? updatedAt.toLocaleString("fi-FI")
+        ? updatedAt.toLocaleString("fi-FI", {
+            timeZone: "Europe/Helsinki",
+          })
         : "Ei raporttia",
     });
 
@@ -706,6 +708,7 @@ history.push({
     new Date()
       .toLocaleString(
         "fi-FI",
+        { timeZone: "Europe/Helsinki" },
       ),
 
   totalTests,
@@ -836,6 +839,7 @@ app.post(
           new Date()
             .toLocaleString(
               "fi-FI",
+              { timeZone: "Europe/Helsinki" },
             ),
 
         totalTests:
