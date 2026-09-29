@@ -138,6 +138,36 @@ function getHistory(source: string): any[] {
   return store[source]?.history ?? [];
 }
 
+function classifyPath(filePath: unknown): "API" | "UI" | null {
+  if (typeof filePath !== "string") {
+    return null;
+  }
+
+  const normalized = filePath.replace(/\\/g, "/").toLowerCase();
+
+  if (normalized.startsWith("api/") || normalized.includes("/api/")) {
+    return "API";
+  }
+
+  if (normalized.startsWith("ui/") || normalized.includes("/ui/")) {
+    return "UI";
+  }
+
+  return null;
+}
+
+function computeOverallTestType(types: Set<string>): string {
+  if (types.size === 0) {
+    return "Unknown";
+  }
+
+  if (types.size > 1) {
+    return "Mixed";
+  }
+
+  return [...types][0];
+}
+
 app.get("/api/results", (req, res) => {
 
   const source =
@@ -263,8 +293,13 @@ const source =
 
     const failedTests: any[] = [];
 
-    const walkSuites = (suites: any[]) => {
+    const walkSuites = (suites: any[], inheritedType: "API" | "UI" | null = null) => {
       for (const suite of suites) {
+        const suiteType =
+          classifyPath(suite.title) ??
+          classifyPath(suite.file) ??
+          inheritedType;
+
         if (suite.specs) {
           for (const spec of suite.specs) {
             if (!spec.ok) {
@@ -273,6 +308,7 @@ const source =
 
               failedTests.push({
                 name: spec.title,
+                testType: suiteType ?? "Unknown",
                 error: (
               result?.error?.message ??
                  'Unknown error'
@@ -286,7 +322,7 @@ const source =
         }
 
         if (suite.suites) {
-          walkSuites(suite.suites);
+          walkSuites(suite.suites, suiteType);
         }
       }
     };
@@ -302,18 +338,24 @@ const source =
 
 app.post("/api/history/delete", async (req, res) => {
   try {
-    const ids = req.body.ids as number[];
+    const ids = (req.body.ids as number[]) ?? [];
 
-    const source =
-      (req.body.source ?? "local").toString();
 
-    let history = getHistory(source);
+    const sourcesToCheck = req.body.source
+      ? [req.body.source.toString()]
+      : Object.keys(store);
 
-    history = history.filter(
-      (item: any) => !ids.includes(item.id)
-    );
+    for (const source of sourcesToCheck) {
+      const history = getHistory(source);
 
-    await saveHistory(source, history);
+      const filtered = history.filter(
+        (item: any) => !ids.includes(item.id)
+      );
+
+      if (filtered.length !== history.length) {
+        await saveHistory(source, filtered);
+      }
+    }
 
     res.json({
       success: true,
@@ -341,8 +383,13 @@ app.get("/api/results/slowest-tests", (req, res) => {
 
     const tests: any[] = [];
 
-    const walkSuites = (suites: any[]) => {
+    const walkSuites = (suites: any[], inheritedType: "API" | "UI" | null = null) => {
       for (const suite of suites) {
+        const suiteType =
+          classifyPath(suite.title) ??
+          classifyPath(suite.file) ??
+          inheritedType;
+
         if (suite.specs) {
           for (const spec of suite.specs) {
             const test = spec.tests?.[0];
@@ -350,6 +397,7 @@ app.get("/api/results/slowest-tests", (req, res) => {
 
             tests.push({
               name: spec.title,
+              type: suiteType ?? "Unknown",
               duration:
                 result?.duration ?? 0,
             });
@@ -357,7 +405,7 @@ app.get("/api/results/slowest-tests", (req, res) => {
         }
 
         if (suite.suites) {
-          walkSuites(suite.suites);
+          walkSuites(suite.suites, suiteType);
         }
       }
     };
@@ -644,9 +692,19 @@ app.post("/api/run-tests", (req, res) => {
 
           const failedTestsDetails: any[] = [];
 const slowestTests: any[] = [];
+const testTypes = new Set<string>();
 
-const walkSuites = (suites: any[]) => {
+const walkSuites = (suites: any[], inheritedType: "API" | "UI" | null = null) => {
   for (const suite of suites) {
+
+    const suiteType =
+      classifyPath(suite.title) ??
+      classifyPath(suite.file) ??
+      inheritedType;
+
+    if (suiteType) {
+      testTypes.add(suiteType);
+    }
 
     if (suite.specs) {
       for (const spec of suite.specs) {
@@ -665,6 +723,8 @@ const walkSuites = (suites: any[]) => {
           failedTestsDetails.push({
             name: spec.title,
 
+            testType: suiteType ?? "Unknown",
+
             error: (
               result?.error?.message ??
               "Unknown error"
@@ -677,6 +737,7 @@ const walkSuites = (suites: any[]) => {
 
         slowestTests.push({
           name: spec.title,
+          type: suiteType ?? "Unknown",
           duration:
             result.duration ?? 0,
         });
@@ -686,6 +747,7 @@ const walkSuites = (suites: any[]) => {
     if (suite.suites) {
       walkSuites(
         suite.suites,
+        suiteType,
       );
     }
   }
@@ -703,6 +765,8 @@ history.push({
   id: Date.now(),
 
   source: "local",
+
+  testType: computeOverallTestType(testTypes),
 
   date:
     new Date()
@@ -788,9 +852,19 @@ app.post(
 
       const failedTestsDetails: any[] = [];
       const slowestTests: any[] = [];
+      const testTypes = new Set<string>();
 
-      const walkSuites = (suites: any[]) => {
+      const walkSuites = (suites: any[], inheritedType: "API" | "UI" | null = null) => {
         for (const suite of suites) {
+          const suiteType =
+            classifyPath(suite.title) ??
+            classifyPath(suite.file) ??
+            inheritedType;
+
+          if (suiteType) {
+            testTypes.add(suiteType);
+          }
+
           if (suite.specs) {
             for (const spec of suite.specs) {
               const test = spec.tests?.[0];
@@ -803,6 +877,7 @@ app.post(
               if (!spec.ok) {
                 failedTestsDetails.push({
                   name: spec.title,
+                  testType: suiteType ?? "Unknown",
                   error: (
                     result?.error?.message ??
                     "Unknown error"
@@ -815,13 +890,14 @@ app.post(
 
               slowestTests.push({
                 name: spec.title,
+                type: suiteType ?? "Unknown",
                 duration: result.duration ?? 0,
               });
             }
           }
 
           if (suite.suites) {
-            walkSuites(suite.suites);
+            walkSuites(suite.suites, suiteType);
           }
         }
       };
@@ -834,6 +910,8 @@ app.post(
         id: Date.now(),
 
         source: "github",
+
+        testType: computeOverallTestType(testTypes),
 
         date:
           new Date()
