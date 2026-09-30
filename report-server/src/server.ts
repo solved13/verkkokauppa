@@ -18,6 +18,12 @@ const playwrightPath = path.resolve(
 );
 
 
+app.use(
+  "/report",
+  express.static(path.join(playwrightPath, "playwright-report")),
+);
+
+
 const localReportPath = path.join(
   playwrightPath,
   "reports",
@@ -137,6 +143,7 @@ function getReportUpdatedAt(source: string): Date | null {
 function getHistory(source: string): any[] {
   return store[source]?.history ?? [];
 }
+
 
 function classifyPath(filePath: unknown): "API" | "UI" | null {
   if (typeof filePath !== "string") {
@@ -339,7 +346,6 @@ const source =
 app.post("/api/history/delete", async (req, res) => {
   try {
     const ids = (req.body.ids as number[]) ?? [];
-
 
     const sourcesToCheck = req.body.source
       ? [req.body.source.toString()]
