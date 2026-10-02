@@ -175,13 +175,108 @@ function computeOverallTestType(types: Set<string>): string {
   return [...types][0];
 }
 
-app.get("/api/results", (req, res) => {
+
+
+type BuildInfo = {
+  branch: string;
+  commit: string;
+  author: string;
+  message: string;
+  buildDate: string;
+};
+
+let buildInfoCache: BuildInfo | null = null;
+let buildInfoFetchedAt = 0;
+const BUILD_INFO_CACHE_MS = 60_000;
+
+async function getBuildInfo(): Promise<BuildInfo | null> {
+  const now = Date.now();
+
+  if (buildInfoCache && now - buildInfoFetchedAt < BUILD_INFO_CACHE_MS) {
+    return buildInfoCache;
+  }
+
+  try {
+    const owner = "solved13";
+    const repo = "verkkokauppa";
+    const branch = "main";
+    const token = process.env.GITHUB_TOKEN;
+
+    const response = await fetch(
+      `https://api.github.com/repos/${owner}/${repo}/commits/${branch}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    if (!response.ok) {
+
+      return buildInfoCache;
+    }
+
+    const data = await response.json();
+
+    const rawDate: string | undefined =
+      data.commit?.author?.date ??
+      data.commit?.committer?.date;
+
+    const info: BuildInfo = {
+      branch,
+      commit: (data.sha ?? "").slice(0, 7),
+      author:
+        data.commit?.author?.name ??
+        data.author?.login ??
+        "Unknown",
+      message: (data.commit?.message ?? "").split("\n")[0],
+      buildDate: rawDate
+        ? new Date(rawDate).toLocaleString("fi-FI", {
+            timeZone: "Europe/Helsinki",
+          })
+        : "Unknown",
+    };
+
+    buildInfoCache = info;
+    buildInfoFetchedAt = now;
+
+    return info;
+  } catch (error) {
+    console.error("Build info haku epäonnistui:", error);
+    return buildInfoCache;
+  }
+}
+
+app.get("/api/build-info", async (req, res) => {
+  try {
+    const info = await getBuildInfo();
+
+    if (!info) {
+      return res.status(503).json({
+        success: false,
+        message: "Build info not available",
+      });
+    }
+
+    return res.json(info);
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+    });
+  }
+});
+
+app.get("/api/results", async (req, res) => {
 
   const source =
     (
       req.query.source ??
       "local"
     ).toString();
+
+  const buildInfo = await getBuildInfo();
 
   if (source === "all") {
 
@@ -215,6 +310,8 @@ app.get("/api/results", (req, res) => {
       failedTests,
 
       lastRun: "All Sources",
+
+      buildInfo,
     });
   }
 
@@ -228,6 +325,7 @@ app.get("/api/results", (req, res) => {
         passedTests: 0,
         failedTests: 0,
         lastRun: "Ei raporttia",
+        buildInfo,
       });
     }
 
@@ -249,6 +347,8 @@ app.get("/api/results", (req, res) => {
             timeZone: "Europe/Helsinki",
           })
         : "Ei raporttia",
+
+      buildInfo,
     });
 
   } catch (error) {
