@@ -11,6 +11,7 @@ const MONGODB_URI = mongod.getUri('sneakerShop')
 export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
+  workers: process.env.CI ? 2 : 4,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0,
   reporter: [

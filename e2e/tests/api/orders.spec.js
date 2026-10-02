@@ -4,7 +4,7 @@ import { registerUser, registerAdmin, createProduct } from '../../helpers.js'
 
 test.describe('Orders API', () => {
   test('placing an order decreases the stock quantity', async ({ request }) => {
-    //const admin = await registerAdmin(request, 'orders-stock')
+    const admin = await registerAdmin(request, 'orders-stock')
     const product = await createProduct(request, admin.token, { stock: 5, price: 40 })
     const buyer = await registerUser(request, 'orders-buyer')
 
@@ -24,7 +24,7 @@ test.describe('Orders API', () => {
   })
 
   test('cannot order more products than are available in stock', async ({ request }) => {
-    //const admin = await registerAdmin(request, 'orders-overstock')
+    const admin = await registerAdmin(request, 'orders-overstock')
     const product = await createProduct(request, admin.token, { stock: 1 })
     const buyer = await registerUser(request, 'orders-overstock-buyer')
 
