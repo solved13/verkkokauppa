@@ -1,12 +1,11 @@
 name: E2E Tests
 
-# Запускається автоматично на кожен push і кожен pull request у main.
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
-  # Дозволяє запустити вручну з вкладки Actions на GitHub, якщо треба.
+
   workflow_dispatch:
 
 permissions:
@@ -14,8 +13,6 @@ permissions:
   pages: write
   id-token: write
 
-# Якщо на main прилітає кілька push поспіль, не публікуємо звіти
-# один поверх одного одночасно — новий деплой чекає завершення попереднього.
 concurrency:
   group: "pages-${{ github.ref }}"
   cancel-in-progress: false
@@ -45,8 +42,6 @@ jobs:
         run: npm ci
         working-directory: e2e
 
-      # Playwright сам качає Chromium (і mongodb-memory-server окремо якає
-      # тимчасовий mongod) — ніякого Docker чи окремих сервісів не треба.
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
         working-directory: e2e
@@ -55,8 +50,6 @@ jobs:
         run: npm test
         working-directory: e2e
 
-      # Звіт зберігаємо як build-артефакт незалежно від результату тестів —
-      # так його можна завантажити й подивитись навіть якщо щось впало.
       - name: Upload report as build artifact
         if: always()
         uses: actions/upload-artifact@v4

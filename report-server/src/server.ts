@@ -12,26 +12,19 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const playwrightPath = path.resolve(
-  __dirname,
-  "../../e2e"
-);
-
+const playwrightPath = path.resolve(__dirname, "../../e2e");
 
 app.use(
   "/report",
   express.static(path.join(playwrightPath, "playwright-report")),
 );
 
-
 const localReportPath = path.join(
   playwrightPath,
   "reports",
   "local",
-  "results.json"
+  "results.json",
 );
-
-
 
 mongoose
   .connect(process.env.MONGODB_URI as string)
@@ -63,7 +56,6 @@ type SourceData = {
   history: any[];
 };
 
-
 const emptySourceData = (): SourceData => ({
   report: null,
   reportUpdatedAt: null,
@@ -83,8 +75,7 @@ async function loadStore() {
       store[r.source] = emptySourceData();
     }
     store[r.source].report = r.report;
-    store[r.source].reportUpdatedAt =
-      (r as any).updatedAt ?? null;
+    store[r.source].reportUpdatedAt = (r as any).updatedAt ?? null;
   }
 
   const histories = await HistoryModel.find({});
@@ -96,10 +87,7 @@ async function loadStore() {
     store[h.source].history = h.history;
   }
 
-  console.log(
-    "Store завантажено з MongoDB:",
-    Object.keys(store),
-  );
+  console.log("Store завантажено з MongoDB:", Object.keys(store));
 }
 
 async function saveReport(source: string, report: any) {
@@ -144,7 +132,6 @@ function getHistory(source: string): any[] {
   return store[source]?.history ?? [];
 }
 
-
 function classifyPath(filePath: unknown): "API" | "UI" | null {
   if (typeof filePath !== "string") {
     return null;
@@ -174,8 +161,6 @@ function computeOverallTestType(types: Set<string>): string {
 
   return [...types][0];
 }
-
-
 
 type BuildInfo = {
   branch: string;
@@ -212,23 +197,18 @@ async function getBuildInfo(): Promise<BuildInfo | null> {
     );
 
     if (!response.ok) {
-
       return buildInfoCache;
     }
 
     const data = await response.json();
 
     const rawDate: string | undefined =
-      data.commit?.author?.date ??
-      data.commit?.committer?.date;
+      data.commit?.author?.date ?? data.commit?.committer?.date;
 
     const info: BuildInfo = {
       branch,
       commit: (data.sha ?? "").slice(0, 7),
-      author:
-        data.commit?.author?.name ??
-        data.author?.login ??
-        "Unknown",
+      author: data.commit?.author?.name ?? data.author?.login ?? "Unknown",
       message: (data.commit?.message ?? "").split("\n")[0],
       buildDate: rawDate
         ? new Date(rawDate).toLocaleString("fi-FI", {
@@ -246,7 +226,7 @@ async function getBuildInfo(): Promise<BuildInfo | null> {
     return buildInfoCache;
   }
 }
-
+// BILD INFO
 app.get("/api/build-info", async (req, res) => {
   try {
     const info = await getBuildInfo();
@@ -268,42 +248,31 @@ app.get("/api/build-info", async (req, res) => {
   }
 });
 
-app.get("/api/results", async (req, res) => {
+//  yhteenveto + viimeisin julkaisuaika (Eurooppa/Helsinki)
 
-  const source =
-    (
-      req.query.source ??
-      "local"
-    ).toString();
+app.get("/api/results", async (req, res) => {
+  const source = (req.query.source ?? "local").toString();
 
   const buildInfo = await getBuildInfo();
 
   if (source === "all") {
-
     const localReport = getReport("local");
     const githubReport = getReport("github");
 
-    const localPassed =
-      localReport?.stats?.expected ?? 0;
+    const localPassed = localReport?.stats?.expected ?? 0;
 
-    const localFailed =
-      localReport?.stats?.unexpected ?? 0;
+    const localFailed = localReport?.stats?.unexpected ?? 0;
 
-    const githubPassed =
-      githubReport?.stats?.expected ?? 0;
+    const githubPassed = githubReport?.stats?.expected ?? 0;
 
-    const githubFailed =
-      githubReport?.stats?.unexpected ?? 0;
+    const githubFailed = githubReport?.stats?.unexpected ?? 0;
 
-    const passedTests =
-      localPassed + githubPassed;
+    const passedTests = localPassed + githubPassed;
 
-    const failedTests =
-      localFailed + githubFailed;
+    const failedTests = localFailed + githubFailed;
 
     return res.json({
-      totalTests:
-        passedTests + failedTests,
+      totalTests: passedTests + failedTests,
 
       passedTests,
 
@@ -316,7 +285,6 @@ app.get("/api/results", async (req, res) => {
   }
 
   try {
-
     const report = getReport(source);
 
     if (!report) {
@@ -333,14 +301,11 @@ app.get("/api/results", async (req, res) => {
 
     return res.json({
       totalTests:
-        (report.stats?.expected ?? 0) +
-        (report.stats?.unexpected ?? 0),
+        (report.stats?.expected ?? 0) + (report.stats?.unexpected ?? 0),
 
-      passedTests:
-        report.stats?.expected ?? 0,
+      passedTests: report.stats?.expected ?? 0,
 
-      failedTests:
-        report.stats?.unexpected ?? 0,
+      failedTests: report.stats?.unexpected ?? 0,
 
       lastRun: updatedAt
         ? updatedAt.toLocaleString("fi-FI", {
@@ -350,9 +315,7 @@ app.get("/api/results", async (req, res) => {
 
       buildInfo,
     });
-
   } catch (error) {
-
     console.error(error);
 
     return res.status(500).json({
@@ -361,46 +324,38 @@ app.get("/api/results", async (req, res) => {
   }
 });
 
-app.get("/api/history", (req, res) => {
+// HISTORIA
 
-  const source =
-    (
-      req.query.source ??
-      "local"
-    ).toString();
+app.get("/api/history", (req, res) => {
+  const source = (req.query.source ?? "local").toString();
 
   if (source === "all") {
-    return res.json([
-      ...getHistory("local"),
-      ...getHistory("github"),
-    ]);
+    return res.json([...getHistory("local"), ...getHistory("github")]);
   }
 
   try {
     return res.json(getHistory(source));
   } catch (error) {
-
     console.error(error);
 
     return res.status(500).json([]);
   }
 });
 
-app.get("/api/results/failed-tests", (req, res) => {
+// epäonnistuneet testit, virheteksti, tyyppi
 
-const source =
-  (
-    req.query.source ??
-    "local"
-  ).toString();
+app.get("/api/results/failed-tests", (req, res) => {
+  const source = (req.query.source ?? "local").toString();
 
   try {
-
     const report = getReport(source);
 
     const failedTests: any[] = [];
 
-    const walkSuites = (suites: any[], inheritedType: "API" | "UI" | null = null) => {
+    const walkSuites = (
+      suites: any[],
+      inheritedType: "API" | "UI" | null = null,
+    ) => {
       for (const suite of suites) {
         const suiteType =
           classifyPath(suite.title) ??
@@ -416,13 +371,10 @@ const source =
               failedTests.push({
                 name: spec.title,
                 testType: suiteType ?? "Unknown",
-                error: (
-              result?.error?.message ??
-                 'Unknown error'
-                ).replace(
-                   /\u001b\[[0-9;]*m/g,
-                   ""
-                )
+                error: (result?.error?.message ?? "Unknown error").replace(
+                  /\u001b\[[0-9;]*m/g,
+                  "",
+                ),
               });
             }
           }
@@ -454,9 +406,7 @@ app.post("/api/history/delete", async (req, res) => {
     for (const source of sourcesToCheck) {
       const history = getHistory(source);
 
-      const filtered = history.filter(
-        (item: any) => !ids.includes(item.id)
-      );
+      const filtered = history.filter((item: any) => !ids.includes(item.id));
 
       if (filtered.length !== history.length) {
         await saveHistory(source, filtered);
@@ -475,21 +425,18 @@ app.post("/api/history/delete", async (req, res) => {
   }
 });
 
-
 app.get("/api/results/slowest-tests", (req, res) => {
-
-  const source =
-  (
-    req.query.source ??
-    "local"
-  ).toString();
+  const source = (req.query.source ?? "local").toString();
 
   try {
     const report = getReport(source);
 
     const tests: any[] = [];
 
-    const walkSuites = (suites: any[], inheritedType: "API" | "UI" | null = null) => {
+    const walkSuites = (
+      suites: any[],
+      inheritedType: "API" | "UI" | null = null,
+    ) => {
       for (const suite of suites) {
         const suiteType =
           classifyPath(suite.title) ??
@@ -504,8 +451,7 @@ app.get("/api/results/slowest-tests", (req, res) => {
             tests.push({
               name: spec.title,
               type: suiteType ?? "Unknown",
-              duration:
-                result?.duration ?? 0,
+              duration: result?.duration ?? 0,
             });
           }
         }
@@ -518,244 +464,151 @@ app.get("/api/results/slowest-tests", (req, res) => {
 
     walkSuites(report?.suites ?? []);
 
-    tests.sort(
-      (a, b) =>
-        b.duration - a.duration
-    );
+    tests.sort((a, b) => b.duration - a.duration);
 
-    res.json(
-      tests.slice(0, 5)
-    );
+    res.json(tests.slice(0, 5));
   } catch (error) {
     console.error(error);
     res.status(500).json([]);
   }
 });
 
-app.get(
-  '/api/latest-failure-screenshot',
-  (req, res) => {
+app.get("/api/latest-failure-screenshot", (req, res) => {
+  const testResultsPath = path.join(playwrightPath, "test-results");
 
-    const testResultsPath =
-      path.join(
-        playwrightPath,
-        'test-results',
-      );
+  if (!fs.existsSync(testResultsPath)) {
+    return res.status(404).send("No screenshots found");
+  }
 
-    if (
-      !fs.existsSync(
-        testResultsPath,
-      )
-    ) {
-      return res
-        .status(404)
-        .send(
-          'No screenshots found',
-        );
-    }
+  const screenshots: string[] = [];
 
-    const screenshots: string[] = [];
+  const walk = (directory: string) => {
+    const files = fs.readdirSync(directory);
 
-    const walk = (
-      directory: string,
-    ) => {
+    for (const file of files) {
+      const fullPath = path.join(directory, file);
 
-      const files =
-        fs.readdirSync(directory);
+      const stat = fs.statSync(fullPath);
 
-      for (const file of files) {
-
-        const fullPath =
-          path.join(
-            directory,
-            file,
-          );
-
-        const stat =
-          fs.statSync(
-            fullPath,
-          );
-
-        if (stat.isDirectory()) {
-          walk(fullPath);
-        }
-
-        if (
-          file.endsWith('.png')
-        ) {
-          screenshots.push(
-            fullPath,
-          );
-        }
+      if (stat.isDirectory()) {
+        walk(fullPath);
       }
-    };
 
-    walk(testResultsPath);
-
-    if (
-      screenshots.length === 0
-    ) {
-      return res
-        .status(404)
-        .send(
-          'No screenshots found',
-        );
+      if (file.endsWith(".png")) {
+        screenshots.push(fullPath);
+      }
     }
+  };
 
-    screenshots.sort(
-      (a, b) =>
-        fs.statSync(b).mtimeMs -
-        fs.statSync(a).mtimeMs,
+  walk(testResultsPath);
+
+  if (screenshots.length === 0) {
+    return res.status(404).send("No screenshots found");
+  }
+
+  screenshots.sort((a, b) => fs.statSync(b).mtimeMs - fs.statSync(a).mtimeMs);
+
+  return res.sendFile(screenshots[0]);
+});
+
+app.get("/api/github/latest-run", async (req, res) => {
+  try {
+    const owner = "solved13";
+
+    const repo = "verkkokauppa";
+
+    const token = process.env.GITHUB_TOKEN;
+
+    const response = await fetch(
+      `https://api.github.com/repos/${owner}/${repo}/actions/runs?per_page=1`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
     );
 
-    return res.sendFile(
-      screenshots[0],
-    );
-  },
-);
+    const data = await response.json();
 
-app.get(
-  "/api/github/latest-run",
-  async (req, res) => {
+    const run = data.workflow_runs?.[0];
 
-    try {
+    return res.json({
+      status: run?.status ?? "unknown",
 
-      const owner =
-        "solved13";
+      conclusion: run?.conclusion ?? "unknown",
 
-      const repo =
-        "verkkokauppa";
+      created_at: run?.created_at,
+    });
+  } catch (error) {
+    console.error(error);
 
-      const token =
-        process.env.GITHUB_TOKEN;
+    res.status(500).json({
+      success: false,
+    });
+  }
+});
 
-      const response =
-        await fetch(
-          `https://api.github.com/repos/${owner}/${repo}/actions/runs?per_page=1`,
-          {
-            headers: {
-              Authorization:
-                `Bearer ${token}`,
-            },
-          },
-        );
+app.post("/api/run-github-tests", async (req, res) => {
+  try {
+    const owner = "solved13";
+    const repo = "verkkokauppa";
+    const workflow = "e2e-tests.yml";
 
-      const data =
-        await response.json();
+    const token = process.env.GITHUB_TOKEN;
 
-      const run =
-        data.workflow_runs?.[0];
+    const body = JSON.stringify({
+      ref: "main",
+    });
 
-      return res.json({
-        status:
-          run?.status ??
-          "unknown",
+    const request = https.request(
+      {
+        hostname: "api.github.com",
 
-        conclusion:
-          run?.conclusion ??
-          "unknown",
+        path: `/repos/${owner}/${repo}/actions/workflows/${workflow}/dispatches`,
 
-        created_at:
-          run?.created_at,
-      });
+        method: "POST",
 
-    } catch (error) {
+        headers: {
+          Authorization: `Bearer ${token}`,
 
-      console.error(error);
+          Accept: "application/vnd.github+json",
 
-      res.status(500).json({
-        success: false,
-      });
-    }
-  },
-);
+          "Content-Type": "application/json",
 
-app.post(
-  "/api/run-github-tests",
-  async (req, res) => {
-    try {
+          "Content-Length": body.length,
 
-      const owner = "solved13";
-      const repo = "verkkokauppa";
-      const workflow =
-        "e2e-tests.yml";
+          "User-Agent": "TestDashboard",
+        },
+      },
 
-      const token =
-        process.env.GITHUB_TOKEN;
+      (response) => {
+        if (response.statusCode === 204) {
+          return res.json({
+            success: true,
+            message: "GitHub Actions workflow started",
+          });
+        }
 
-      const body =
-        JSON.stringify({
-          ref: "main",
+        return res.status(500).json({
+          success: false,
         });
+      },
+    );
 
-      const request =
-        https.request(
-          {
-            hostname:
-              "api.github.com",
+    request.write(body);
 
-            path:
-              `/repos/${owner}/${repo}/actions/workflows/${workflow}/dispatches`,
+    request.end();
+  } catch (error) {
+    console.error(error);
 
-            method: "POST",
-
-            headers: {
-              Authorization:
-                `Bearer ${token}`,
-
-              Accept:
-                "application/vnd.github+json",
-
-              "Content-Type":
-                "application/json",
-
-              "Content-Length":
-                body.length,
-
-              "User-Agent":
-                "TestDashboard",
-            },
-          },
-
-          (response) => {
-
-            if (
-              response.statusCode ===
-              204
-            ) {
-              return res.json({
-                success: true,
-                message:
-                  "GitHub Actions workflow started",
-              });
-            }
-
-            return res.status(500).json({
-              success: false,
-            });
-          },
-        );
-
-      request.write(body);
-
-      request.end();
-
-    } catch (error) {
-
-      console.error(error);
-
-      return res.status(500).json({
-        success: false,
-      });
-    }
-  },
-);
+    return res.status(500).json({
+      success: false,
+    });
+  }
+});
 
 app.post("/api/run-tests", (req, res) => {
-
-  console.log(
-    "Playwright testit käynnistetään..."
-  );
+  console.log("Playwright testit käynnistetään...");
 
   exec(
     "npx playwright test",
@@ -764,319 +617,247 @@ app.post("/api/run-tests", (req, res) => {
       windowsHide: false,
     },
 
-    async (
-      error: ExecException | null,
-      stdout: string,
-      stderr: string
-    ) => {
-
+    async (error: ExecException | null, stdout: string, stderr: string) => {
       console.log(stdout);
       console.log(stderr);
 
       if (fs.existsSync(localReportPath)) {
-
         try {
-
-          const report = JSON.parse(
-            fs.readFileSync(
-              localReportPath,
-              "utf8"
-            )
-          );
+          const report = JSON.parse(fs.readFileSync(localReportPath, "utf8"));
 
           const totalTests =
-            (report.stats?.expected ?? 0) +
-            (report.stats?.unexpected ?? 0);
+            (report.stats?.expected ?? 0) + (report.stats?.unexpected ?? 0);
 
-          const passedTests =
-            report.stats?.expected ?? 0;
+          const passedTests = report.stats?.expected ?? 0;
 
-          const failedTests =
-            report.stats?.unexpected ?? 0;
+          const failedTests = report.stats?.unexpected ?? 0;
 
           let history: any[] = getHistory("local");
 
           const failedTestsDetails: any[] = [];
-const slowestTests: any[] = [];
-const testTypes = new Set<string>();
+          const slowestTests: any[] = [];
+          const testTypes = new Set<string>();
 
-const walkSuites = (suites: any[], inheritedType: "API" | "UI" | null = null) => {
-  for (const suite of suites) {
+          const walkSuites = (
+            suites: any[],
+            inheritedType: "API" | "UI" | null = null,
+          ) => {
+            for (const suite of suites) {
+              const suiteType =
+                classifyPath(suite.title) ??
+                classifyPath(suite.file) ??
+                inheritedType;
 
-    const suiteType =
-      classifyPath(suite.title) ??
-      classifyPath(suite.file) ??
-      inheritedType;
+              if (suiteType) {
+                testTypes.add(suiteType);
+              }
 
-    if (suiteType) {
-      testTypes.add(suiteType);
-    }
+              if (suite.specs) {
+                for (const spec of suite.specs) {
+                  const test = spec.tests?.[0];
 
-    if (suite.specs) {
-      for (const spec of suite.specs) {
+                  const result = test?.results?.[0];
 
-        const test =
-          spec.tests?.[0];
+                  if (!result) {
+                    continue;
+                  }
 
-        const result =
-          test?.results?.[0];
+                  if (!spec.ok) {
+                    failedTestsDetails.push({
+                      name: spec.title,
 
-        if (!result) {
-          continue;
-        }
+                      testType: suiteType ?? "Unknown",
 
-        if (!spec.ok) {
-          failedTestsDetails.push({
-            name: spec.title,
+                      error: (
+                        result?.error?.message ?? "Unknown error"
+                      ).replace(/\u001b\[[0-9;]*m/g, ""),
+                    });
+                  }
 
-            testType: suiteType ?? "Unknown",
+                  slowestTests.push({
+                    name: spec.title,
+                    type: suiteType ?? "Unknown",
+                    duration: result.duration ?? 0,
+                  });
+                }
+              }
 
-            error: (
-              result?.error?.message ??
-              "Unknown error"
-            ).replace(
-              /\u001b\[[0-9;]*m/g,
-              "",
-            ),
+              if (suite.suites) {
+                walkSuites(suite.suites, suiteType);
+              }
+            }
+          };
+
+          walkSuites(report.suites);
+
+          slowestTests.sort((a, b) => b.duration - a.duration);
+
+          history.push({
+            id: Date.now(),
+
+            source: "local",
+
+            testType: computeOverallTestType(testTypes),
+
+            date: new Date().toLocaleString("fi-FI", {
+              timeZone: "Europe/Helsinki",
+            }),
+
+            totalTests,
+            passedTests,
+            failedTests,
+
+            duration: Math.round(report.stats?.duration ?? 0),
+
+            failedTestsDetails,
+
+            slowestTests: slowestTests.slice(0, 5),
           });
-        }
 
-        slowestTests.push({
-          name: spec.title,
-          type: suiteType ?? "Unknown",
-          duration:
-            result.duration ?? 0,
-        });
-      }
-    }
-
-    if (suite.suites) {
-      walkSuites(
-        suite.suites,
-        suiteType,
-      );
-    }
-  }
-};
-
-walkSuites(report.suites);
-
-slowestTests.sort(
-  (a, b) =>
-    b.duration -
-    a.duration,
-);
-
-history.push({
-  id: Date.now(),
-
-  source: "local",
-
-  testType: computeOverallTestType(testTypes),
-
-  date:
-    new Date()
-      .toLocaleString(
-        "fi-FI",
-        { timeZone: "Europe/Helsinki" },
-      ),
-
-  totalTests,
-  passedTests,
-  failedTests,
-
-  duration:
-    Math.round(
-      report.stats?.duration ?? 0,
-    ),
-
-  failedTestsDetails,
-
-  slowestTests:
-    slowestTests.slice(
-      0,
-      5,
-    ),
-});
-
-if (history.length > 10) {
-  history = history.slice(-10);
-}
+          if (history.length > 10) {
+            history = history.slice(-10);
+          }
           await saveReport("local", report);
           await saveHistory("local", history);
-
         } catch (historyError) {
-
-          console.error(
-            "Historian tallennus epäonnistui"
-          );
+          console.error("Historian tallennus epäonnistui");
 
           console.error(historyError);
         }
       }
 
       if (error) {
-
-        console.log(
-          "Testeissä epäonnistumisia."
-        );
+        console.log("Testeissä epäonnistumisia.");
 
         return res.json({
           success: true,
-          message:
-            "Testiajo suoritettu, osa testeistä epäonnistui",
+          message: "Testiajo suoritettu, osa testeistä epäonnistui",
         });
       }
 
       return res.json({
         success: true,
-        message:
-          "Playwright testit suoritettu",
+        message: "Playwright testit suoritettu",
       });
-    }
+    },
   );
 });
 
-app.post(
-  "/api/github/import",
-  async (req, res) => {
+app.post("/api/github/import", async (req, res) => {
+  try {
+    const report = req.body;
 
-    try {
+    await saveReport("github", report);
 
-      const report =
-        req.body;
+    const passedTests = report.stats?.expected ?? 0;
 
-      await saveReport("github", report);
+    const failedTests = report.stats?.unexpected ?? 0;
 
-      const passedTests =
-        report.stats?.expected ?? 0;
+    let history: any[] = getHistory("github");
 
-      const failedTests =
-        report.stats?.unexpected ?? 0;
+    const failedTestsDetails: any[] = [];
+    const slowestTests: any[] = [];
+    const testTypes = new Set<string>();
 
-      let history: any[] = getHistory("github");
+    const walkSuites = (
+      suites: any[],
+      inheritedType: "API" | "UI" | null = null,
+    ) => {
+      for (const suite of suites) {
+        const suiteType =
+          classifyPath(suite.title) ??
+          classifyPath(suite.file) ??
+          inheritedType;
 
-      const failedTestsDetails: any[] = [];
-      const slowestTests: any[] = [];
-      const testTypes = new Set<string>();
+        if (suiteType) {
+          testTypes.add(suiteType);
+        }
 
-      const walkSuites = (suites: any[], inheritedType: "API" | "UI" | null = null) => {
-        for (const suite of suites) {
-          const suiteType =
-            classifyPath(suite.title) ??
-            classifyPath(suite.file) ??
-            inheritedType;
+        if (suite.specs) {
+          for (const spec of suite.specs) {
+            const test = spec.tests?.[0];
+            const result = test?.results?.[0];
 
-          if (suiteType) {
-            testTypes.add(suiteType);
-          }
+            if (!result) {
+              continue;
+            }
 
-          if (suite.specs) {
-            for (const spec of suite.specs) {
-              const test = spec.tests?.[0];
-              const result = test?.results?.[0];
-
-              if (!result) {
-                continue;
-              }
-
-              if (!spec.ok) {
-                failedTestsDetails.push({
-                  name: spec.title,
-                  testType: suiteType ?? "Unknown",
-                  error: (
-                    result?.error?.message ??
-                    "Unknown error"
-                  ).replace(
-                    /\u001b\[[0-9;]*m/g,
-                    "",
-                  ),
-                });
-              }
-
-              slowestTests.push({
+            if (!spec.ok) {
+              failedTestsDetails.push({
                 name: spec.title,
-                type: suiteType ?? "Unknown",
-                duration: result.duration ?? 0,
+                testType: suiteType ?? "Unknown",
+                error: (result?.error?.message ?? "Unknown error").replace(
+                  /\u001b\[[0-9;]*m/g,
+                  "",
+                ),
               });
             }
-          }
 
-          if (suite.suites) {
-            walkSuites(suite.suites, suiteType);
+            slowestTests.push({
+              name: spec.title,
+              type: suiteType ?? "Unknown",
+              duration: result.duration ?? 0,
+            });
           }
         }
-      };
 
-      walkSuites(report?.suites ?? []);
-
-      slowestTests.sort((a, b) => b.duration - a.duration);
-
-      history.push({
-        id: Date.now(),
-
-        source: "github",
-
-        testType: computeOverallTestType(testTypes),
-
-        date:
-          new Date()
-            .toLocaleString(
-              "fi-FI",
-              { timeZone: "Europe/Helsinki" },
-            ),
-
-        totalTests:
-          passedTests +
-          failedTests,
-
-        passedTests,
-
-        failedTests,
-
-        duration:
-          Math.round(
-            report.stats
-              ?.duration ?? 0,
-          ),
-
-        failedTestsDetails,
-
-        slowestTests: slowestTests.slice(0, 5),
-      });
-
-      if (history.length > 10) {
-        history = history.slice(-10);
+        if (suite.suites) {
+          walkSuites(suite.suites, suiteType);
+        }
       }
+    };
 
-      await saveHistory("github", history);
+    walkSuites(report?.suites ?? []);
 
-      return res.json({
-        success: true,
-      });
+    slowestTests.sort((a, b) => b.duration - a.duration);
 
-    } catch (error) {
+    history.push({
+      id: Date.now(),
 
-      console.error(error);
+      source: "github",
 
-      return res.status(500).json({
-        success: false,
-      });
+      testType: computeOverallTestType(testTypes),
+
+      date: new Date().toLocaleString("fi-FI", { timeZone: "Europe/Helsinki" }),
+
+      totalTests: passedTests + failedTests,
+
+      passedTests,
+
+      failedTests,
+
+      duration: Math.round(report.stats?.duration ?? 0),
+
+      failedTestsDetails,
+
+      slowestTests: slowestTests.slice(0, 5),
+    });
+
+    if (history.length > 10) {
+      history = history.slice(-10);
     }
-  },
-);
 
-const PORT = process.env.PORT
-  ? Number(process.env.PORT)
-  : 3000;
+    await saveHistory("github", history);
+
+    return res.json({
+      success: true,
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      success: false,
+    });
+  }
+});
+
+const PORT = process.env.PORT ? Number(process.env.PORT) : 3000;
 
 async function start() {
   await loadStore();
 
   app.listen(PORT, () => {
-    console.log(
-      `Server running on port ${PORT}`
-    );
+    console.log(`Server running on port ${PORT}`);
   });
 }
 
